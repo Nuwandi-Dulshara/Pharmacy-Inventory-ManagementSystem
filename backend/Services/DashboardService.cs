@@ -3,15 +3,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MediStock.Services;
 
-public sealed class DashboardService(MediStockDbContext dbContext)
+public sealed class DashboardService(MediStockDbContext dbContext, AppSettingsService settingsService)
 {
-    public const int LowStockThreshold = 10;
-    public const int ExpiryWarningDays = 30;
-
     public async Task<DashboardOverview> GetOverviewAsync(DateTime utcNow, CancellationToken cancellationToken)
     {
         var today = utcNow.Date;
-        var expiryCutoff = today.AddDays(ExpiryWarningDays);
+        var settings = await settingsService.GetAllAsync(cancellationToken);
+        var lowStockThreshold = ReadSetting(settings, "LowStockQuantity", 10);
+        var expiryWarningDays = ReadSetting(settings, "ExpiryWarningDays", 30);
+        var expiryCutoff = today.AddDays(expiryWarningDays);
 
         var totalMedicines = await dbContext.Medicines
             .AsNoTracking()
@@ -19,7 +19,7 @@ public sealed class DashboardService(MediStockDbContext dbContext)
 
         var totalStockQuantity = await dbContext.StockBatches
             .AsNoTracking()
-            .Where(batch => batch.Quantity > 0)
+            .Where(batch => batch.Quantity > 0 && batch.ExpiryDate >= today)
             .SumAsync(batch => (int?)batch.Quantity, cancellationToken) ?? 0;
 
         var totalSales = await dbContext.Sales
@@ -53,9 +53,9 @@ public sealed class DashboardService(MediStockDbContext dbContext)
             });
 
         var lowStockMedicineCount = await lowStockQuantities
-            .CountAsync(alert => alert.Quantity <= LowStockThreshold, cancellationToken);
+            .CountAsync(alert => alert.Quantity <= lowStockThreshold, cancellationToken);
         var lowStockAlerts = await lowStockQuantities
-            .Where(alert => alert.Quantity <= LowStockThreshold)
+            .Where(alert => alert.Quantity <= lowStockThreshold)
             .OrderBy(alert => alert.Quantity)
             .ThenBy(alert => alert.Name)
             .Take(5)
@@ -127,8 +127,15 @@ public sealed class DashboardService(MediStockDbContext dbContext)
             recentSales,
             lowStockAlerts,
             expiringSoonCount,
-            expiringSoon);
+            expiringSoon,
+            lowStockThreshold,
+            expiryWarningDays);
     }
+
+    private static int ReadSetting(IReadOnlyDictionary<string, string> settings, string key, int fallback) =>
+        settings.TryGetValue(key, out var value) && int.TryParse(value, out var parsed) && parsed >= 0
+            ? parsed
+            : fallback;
 }
 
 public sealed record DashboardOverview(
@@ -142,7 +149,9 @@ public sealed record DashboardOverview(
     IReadOnlyList<RecentSale> RecentSales,
     IReadOnlyList<LowStockAlert> LowStockAlerts,
     int ExpiringSoonCount,
-    IReadOnlyList<ExpiringBatchAlert> ExpiringSoon);
+    IReadOnlyList<ExpiringBatchAlert> ExpiringSoon,
+    int LowStockThreshold,
+    int ExpiryWarningDays);
 
 public sealed record MonthlySalesPoint(string Month, decimal Amount);
 public sealed record RecentSale(string InvoiceNumber, DateTime SoldAtUtc, decimal TotalAmount, string PaymentMethod);

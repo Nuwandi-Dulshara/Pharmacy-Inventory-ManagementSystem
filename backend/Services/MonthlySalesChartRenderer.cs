@@ -9,20 +9,20 @@ namespace MediStock;
 
 public static class MonthlySalesChartRenderer
 {
-    public static string RenderDataUrl(IReadOnlyList<MonthlySalesPoint> data)
+    public static string RenderDataUrl(IReadOnlyList<MonthlySalesPoint> data, bool darkMode = false)
     {
         var chart = new SKCartesianChart
         {
             Width = 900,
             Height = 300,
-            Background = SKColors.White,
+            Background = darkMode ? new SKColor(24, 37, 29) : SKColors.White,
             Series =
             [
                 new ColumnSeries<double>
                 {
                     Name = "Sales revenue",
                     Values = data.Select(point => (double)point.Amount).ToArray(),
-                    Fill = new SolidColorPaint(new SKColor(23, 76, 55)),
+                    Fill = new SolidColorPaint(darkMode ? new SKColor(112, 184, 135) : new SKColor(23, 76, 55)),
                     Stroke = null
                 }
             ],
@@ -33,7 +33,7 @@ public static class MonthlySalesChartRenderer
                     Labels = data.Select(point => point.Month).ToArray(),
                     TextSize = 10,
                     LabelsRotation = 0,
-                    LabelsPaint = new SolidColorPaint(new SKColor(113, 128, 119))
+                    LabelsPaint = new SolidColorPaint(darkMode ? new SKColor(166, 181, 170) : new SKColor(113, 128, 119))
                 }
             ],
             YAxes =
@@ -43,7 +43,7 @@ public static class MonthlySalesChartRenderer
                     MinLimit = 0,
                     TextSize = 10,
                     Labeler = value => value.ToString("N0"),
-                    LabelsPaint = new SolidColorPaint(new SKColor(113, 128, 119))
+                    LabelsPaint = new SolidColorPaint(darkMode ? new SKColor(166, 181, 170) : new SKColor(113, 128, 119))
                 }
             ]
         };

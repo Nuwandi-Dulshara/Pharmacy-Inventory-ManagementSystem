@@ -1,0 +1,25 @@
+<UserControl x:Class="MediStock.Desktop.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel>
+        <TextBlock Text="Settings" FontSize="28" FontWeight="SemiBold" />
+        <TextBlock Text="These inventory alerts use the same AppSettings records as the web application."
+                   Foreground="{DynamicResource MutedBrush}" Margin="0,3,0,20" />
+        <Border Background="{DynamicResource SurfaceBrush}" Padding="20"
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="8"
+                HorizontalAlignment="Left" Width="560">
+            <StackPanel>
+                <TextBlock Text="Low-stock threshold (units)" />
+                <TextBox x:Name="LowStockBox" />
+                <TextBlock Text="Expiry warning period (days)" />
+                <TextBox x:Name="ExpiryDaysBox" />
+                <TextBlock Text="Desktop theme" />
+                <ComboBox x:Name="ThemeBox" SelectedIndex="0">
+                    <ComboBoxItem Content="Light" /><ComboBoxItem Content="Dark" />
+                </ComboBox>
+                <TextBlock x:Name="StatusText" Foreground="{DynamicResource DangerBrush}" TextWrapping="Wrap" />
+                <Button Content="Save settings" Click="Save_Click" HorizontalAlignment="Left" />
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

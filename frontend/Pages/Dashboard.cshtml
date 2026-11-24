@@ -46,7 +46,7 @@
             <div class="stat-icon stat-icon-warning">!</div>
             <span class="dashboard-stat-label">LOW STOCK MEDICINES</span>
             <strong>@Model.Overview.LowStockMedicines</strong>
-            <small>At or below @DashboardService.LowStockThreshold units</small>
+            <small>At or below @Model.Overview.LowStockThreshold units</small>
         </article>
         <article class="dashboard-stat">
             <div class="stat-icon stat-icon-warning">◷</div>
@@ -121,7 +121,7 @@
             <div class="panel-heading">
                 <div>
                     <h2>Low stock alerts</h2>
-                    <p>Medicines with @DashboardService.LowStockThreshold or fewer usable units</p>
+                    <p>Medicines with @Model.Overview.LowStockThreshold or fewer usable units</p>
                 </div>
                 <span class="alert-count">@Model.Overview.LowStockMedicines</span>
             </div>
@@ -151,7 +151,7 @@
             <div class="panel-heading">
                 <div>
                     <h2>Medicines expiring soon</h2>
-                    <p>Stock expiring within @DashboardService.ExpiryWarningDays days</p>
+                    <p>Stock expiring within @Model.Overview.ExpiryWarningDays days</p>
                 </div>
                 <span class="alert-count expiry-count">@Model.Overview.ExpiringSoonCount</span>
             </div>
@@ -159,7 +159,7 @@
             {
                 <div class="empty-state compact-empty">
                     <strong>No upcoming expiries</strong>
-                    <span>Batches expiring within the next @DashboardService.ExpiryWarningDays days will appear here.</span>
+                    <span>Batches expiring within the next @Model.Overview.ExpiryWarningDays days will appear here.</span>
                 </div>
             }
             else

@@ -1,4 +1,6 @@
+@inject MediStock.Services.AppSettingsService AppSettings
 @{
+    var theme = await AppSettings.GetStringAsync("Theme", "Light");
     var isAuthenticated = User.Identity?.IsAuthenticated == true;
     var currentPath = Context.Request.Path.Value;
     var isLandingPage = currentPath == "/" ||
@@ -13,7 +15,7 @@
     <title>@ViewData["Title"] · MediStock</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body>
+<body data-theme="@(theme.Equals("Dark", StringComparison.OrdinalIgnoreCase) ? "dark" : "light")">
     <header class="site-header">
         <a class="brand" asp-page="/Index" aria-label="MediStock home">
             <span class="brand-mark" aria-hidden="true"><span></span></span>

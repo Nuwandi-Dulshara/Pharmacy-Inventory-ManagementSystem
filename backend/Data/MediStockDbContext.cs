@@ -12,6 +12,7 @@ public sealed class MediStockDbContext(DbContextOptions<MediStockDbContext> opti
     public DbSet<Sale> Sales => Set<Sale>();
     public DbSet<SaleItem> SaleItems => Set<SaleItem>();
     public DbSet<StockAdjustment> StockAdjustments => Set<StockAdjustment>();
+    public DbSet<RefundHistory> RefundHistories => Set<RefundHistory>();
     public DbSet<AppSetting> AppSettings => Set<AppSetting>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -86,6 +87,17 @@ public sealed class MediStockDbContext(DbContextOptions<MediStockDbContext> opti
             entity.HasOne(adjustment => adjustment.StockBatch)
                 .WithMany()
                 .HasForeignKey(adjustment => adjustment.StockBatchId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<RefundHistory>(entity =>
+        {
+            entity.ToTable("RefundHistory");
+            entity.HasIndex(history => history.SaleId).IsUnique();
+            entity.Property(history => history.Amount).HasConversion(moneyConverter).HasColumnType("INTEGER");
+            entity.HasOne(history => history.Sale)
+                .WithOne(sale => sale.RefundHistory)
+                .HasForeignKey<RefundHistory>(history => history.SaleId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
