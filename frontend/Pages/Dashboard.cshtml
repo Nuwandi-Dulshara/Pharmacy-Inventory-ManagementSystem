@@ -8,7 +8,6 @@
 <section class="dashboard-page wrap">
     <div class="dashboard-heading">
         <div>
-            <span class="section-kicker">PHARMACY OVERVIEW</span>
             <h1>Dashboard</h1>
             <p>@User.FindFirst("PharmacyName")?.Value</p>
         </div>
@@ -26,19 +25,16 @@
             <div class="stat-icon">✚</div>
             <span class="dashboard-stat-label">TOTAL MEDICINES</span>
             <strong>@Model.Overview.TotalMedicines</strong>
-            <small>Active medicine records</small>
         </article>
         <article class="dashboard-stat">
             <div class="stat-icon">▤</div>
             <span class="dashboard-stat-label">TOTAL STOCK QUANTITY</span>
             <strong>@Model.Overview.TotalStockQuantity.ToString("N0")</strong>
-            <small>Usable units in current batches</small>
         </article>
         <article class="dashboard-stat">
             <div class="stat-icon">↗</div>
             <span class="dashboard-stat-label">TOTAL SALES</span>
             <strong class="stat-money">LKR @Model.Overview.TotalSales.ToString("N2")</strong>
-            <small>Completed transactions</small>
         </article>
         <article class="dashboard-stat">
             <div class="stat-icon stat-icon-warning">!</div>
@@ -50,13 +46,11 @@
             <div class="stat-icon stat-icon-warning">◷</div>
             <span class="dashboard-stat-label">EXPIRED MEDICINES</span>
             <strong>@Model.Overview.ExpiredMedicines</strong>
-            <small>With stock remaining</small>
         </article>
         <article class="dashboard-stat">
             <div class="stat-icon">♙</div>
             <span class="dashboard-stat-label">TOTAL SUPPLIERS</span>
             <strong>@Model.Overview.TotalSuppliers</strong>
-            <small>Active supplier records</small>
         </article>
     </div>
 
@@ -65,9 +59,7 @@
             <div class="panel-heading">
                 <div>
                     <h2>Monthly sales</h2>
-                    <p>Completed sales over the last 12 months</p>
                 </div>
-                <span class="period-chip">12 MONTHS</span>
             </div>
             <div class="sales-chart">
                 <img src="@Model.SalesChartDataUrl" alt="Column chart showing sales revenue for each of the last 12 months." />
@@ -79,7 +71,6 @@
             <div class="panel-heading">
                 <div>
                     <h2>Recent sales</h2>
-                    <p>Your latest completed transactions</p>
                 </div>
             </div>
             @if (Model.Overview.RecentSales.Count == 0)

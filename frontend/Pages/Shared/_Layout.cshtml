@@ -2,6 +2,7 @@
 @{
     var theme = await AppSettings.GetStringAsync("Theme", "Light");
     var isAuthenticated = User.Identity?.IsAuthenticated == true;
+    var isAuthPage = Context.Request.Path.StartsWithSegments("/Account");
     var currentPath = Context.Request.Path.Value;
     var isLandingPage = currentPath == "/" ||
                         string.Equals(currentPath, "/Index", StringComparison.OrdinalIgnoreCase);
@@ -14,6 +15,7 @@
     <meta name="theme-color" content="#176b4d" />
     <title>@ViewData["Title"] · MediStock</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/green-theme.css" asp-append-version="true" />
 </head>
 <body data-theme="@(theme.Equals("Dark", StringComparison.OrdinalIgnoreCase) ? "dark" : "light")">
     <header class="site-header">
@@ -21,31 +23,38 @@
             <span class="brand-mark" aria-hidden="true"><span></span></span>
             <span class="brand-copy">
                 <strong>MediStock</strong>
-                <small>PHARMACY MANAGEMENT</small>
             </span>
         </a>
+        @if (isLandingPage || isAuthPage || !isAuthenticated)
+        {
+            <nav class="public-nav" aria-label="Main navigation">
+                <a class="nav-link" href="/#home">Home</a>
+                <a class="nav-link" href="/#about">About</a>
+                <a class="nav-link" href="/#features">Features</a>
+                <a class="nav-link" href="/#contact">Contact</a>
+            </nav>
+        }
         <nav class="header-actions" aria-label="Account navigation">
             @if (isAuthenticated)
             {
                 <span class="header-prompt">@User.Identity?.Name</span>
-                @if (isLandingPage)
+                @if (isLandingPage || isAuthPage)
                 {
                     <a class="button button-outline button-small" asp-page="/Dashboard">Dashboard</a>
                 }
             }
             else
             {
-                <span class="header-prompt">Already have an account?</span>
                 <a class="button button-outline button-small" asp-page="/Account/Login">Login</a>
+                <a class="button button-primary button-small" asp-page="/Account/Register">Register</a>
             }
         </nav>
     </header>
 
-    @if (isAuthenticated && !isLandingPage)
+    @if (isAuthenticated && !isLandingPage && !isAuthPage)
     {
         <div class="app-shell">
             <aside class="app-sidebar" aria-label="Main navigation">
-                <span class="sidebar-heading">WORKSPACE</span>
                 <nav class="sidebar-nav">
                     <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Dashboard") ? "is-active" : "")"
                        asp-page="/Dashboard" aria-current="@(Context.Request.Path.StartsWithSegments("/Dashboard") ? "page" : null)">
@@ -88,7 +97,13 @@
     }
 
     <footer class="site-footer">
-        <span>MediStock</span>
+        <a class="footer-brand" asp-page="/Index">MediStock <span>Pharmacy inventory management</span></a>
+        <nav aria-label="Footer navigation">
+            <a href="/#about">About</a>
+            <a href="/#features">Features</a>
+            <a href="/#contact">Contact</a>
+        </nav>
+        <span>© @DateTime.Now.Year MediStock. All rights reserved.</span>
     </footer>
     @await RenderSectionAsync("Scripts", required: false)
     <script src="~/js/site.js" asp-append-version="true"></script>

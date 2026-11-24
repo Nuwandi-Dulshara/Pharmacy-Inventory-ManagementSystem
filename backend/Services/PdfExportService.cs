@@ -28,7 +28,7 @@ public sealed class PdfExportService
             {
                 page.Size(PageSizes.A4);
                 page.Margin(32);
-                page.DefaultTextStyle(style => style.FontSize(10));
+                page.DefaultTextStyle(style => style.FontSize(12));
                 page.Content().Column(column =>
                 {
                     column.Spacing(14);
@@ -96,13 +96,13 @@ public sealed class PdfExportService
             {
                 page.Size(PageSizes.A4.Landscape());
                 page.Margin(24);
-                page.DefaultTextStyle(style => style.FontSize(8));
+                page.DefaultTextStyle(style => style.FontSize(10));
                 page.Content().Column(column =>
                 {
                     column.Spacing(8);
                     column.Item().Text(pharmacyName).FontSize(17).Bold().FontColor(Colors.Green.Darken3);
                     column.Item().Text($"{reportType} report | {from:dd MMM yyyy} - {to:dd MMM yyyy}")
-                        .FontSize(11)
+                        .FontSize(13)
                         .Bold();
                     column.Item().Table(table =>
                     {
