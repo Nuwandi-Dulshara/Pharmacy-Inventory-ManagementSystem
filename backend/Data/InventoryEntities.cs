@@ -64,6 +64,7 @@ public sealed class Sale
     public string? VoidReason { get; set; }
     public DateTime? RefundedAtUtc { get; set; }
     public ICollection<SaleItem> Items { get; set; } = new List<SaleItem>();
+    public RefundHistory? RefundHistory { get; set; }
 }
 
 public sealed class SaleItem
@@ -88,6 +89,19 @@ public sealed class StockAdjustment
     public int QuantityChange { get; set; }
     public string Reason { get; set; } = string.Empty;
     public DateTime AdjustedAtUtc { get; set; }
+}
+
+public sealed class RefundHistory
+{
+    public int Id { get; set; }
+    public int SaleId { get; set; }
+    public Sale Sale { get; set; } = null!;
+    public string Action { get; set; } = string.Empty;
+    public string Reason { get; set; } = string.Empty;
+    public string AuthorizedUser { get; set; } = string.Empty;
+    public string AuthorizedUserEmail { get; set; } = string.Empty;
+    public decimal Amount { get; set; }
+    public DateTime CreatedUtc { get; set; }
 }
 
 public sealed class AppSetting

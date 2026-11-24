@@ -134,6 +134,17 @@ public sealed class AuthService
                 AdjustedAtUtc TEXT NOT NULL
             );
 
+            CREATE TABLE IF NOT EXISTS RefundHistory (
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                SaleId INTEGER NOT NULL UNIQUE REFERENCES Sales(Id) ON DELETE RESTRICT,
+                Action TEXT NOT NULL CHECK (Action IN ('Refund', 'Void')),
+                Reason TEXT NOT NULL,
+                AuthorizedUser TEXT NOT NULL,
+                AuthorizedUserEmail TEXT NOT NULL,
+                Amount INTEGER NOT NULL CHECK (Amount >= 0),
+                CreatedUtc TEXT NOT NULL
+            );
+
             CREATE INDEX IF NOT EXISTS IX_Medicines_CategoryId ON Medicines(CategoryId);
             CREATE INDEX IF NOT EXISTS IX_StockBatches_Medicine_Expiry ON StockBatches(MedicineId, ExpiryDate);
             CREATE INDEX IF NOT EXISTS IX_Sales_SoldAtUtc ON Sales(SoldAtUtc);
@@ -259,20 +270,85 @@ public sealed class AuthService
             : null;
     }
 
-    public bool UpdateProfile(string email, string fullName, string phoneNumber, string pharmacyName)
+    public AuthenticatedUser? GetAuthenticatedUser(string email)
     {
         using var connection = new SqliteConnection(ConnectionString);
         connection.Open();
         using var command = connection.CreateCommand();
         command.CommandText = """
-            UPDATE Users SET FullName=$fullName, PhoneNumber=$phone, PharmacyName=$pharmacy
+            SELECT FullName, PharmacyName, Role
+            FROM Users WHERE Email = $email COLLATE NOCASE;
+            """;
+        command.Parameters.AddWithValue("$email", email);
+        using var reader = command.ExecuteReader();
+        return reader.Read()
+            ? new AuthenticatedUser(reader.GetString(0), reader.GetString(1), reader.GetString(2))
+            : null;
+    }
+
+    public bool UpdateProfile(
+        string email,
+        string fullName,
+        string phoneNumber,
+        string pharmacyName,
+        string? currentPassword,
+        string? newPassword,
+        out bool passwordIncorrect)
+    {
+        passwordIncorrect = false;
+        using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
+        using var transaction = connection.BeginTransaction(deferred: false);
+        byte[]? newSalt = null;
+        byte[]? newHash = null;
+        if (!string.IsNullOrWhiteSpace(newPassword))
+        {
+            using var credentials = connection.CreateCommand();
+            credentials.Transaction = transaction;
+            credentials.CommandText = """
+                SELECT PasswordSalt, PasswordHash FROM Users
+                WHERE Email=$email COLLATE NOCASE;
+                """;
+            credentials.Parameters.AddWithValue("$email", email);
+            using var reader = credentials.ExecuteReader();
+            if (!reader.Read())
+            {
+                return false;
+            }
+
+            var salt = (byte[])reader["PasswordSalt"];
+            var hash = (byte[])reader["PasswordHash"];
+            if (string.IsNullOrWhiteSpace(currentPassword) ||
+                !CryptographicOperations.FixedTimeEquals(HashPassword(currentPassword, salt), hash))
+            {
+                passwordIncorrect = true;
+                return false;
+            }
+
+            newSalt = RandomNumberGenerator.GetBytes(SaltSize);
+            newHash = HashPassword(newPassword, newSalt);
+        }
+
+        using var command = connection.CreateCommand();
+        command.Transaction = transaction;
+        command.CommandText = """
+            UPDATE Users
+            SET FullName=$fullName,
+                PhoneNumber=$phone,
+                PharmacyName=$pharmacy,
+                PasswordSalt=COALESCE($salt, PasswordSalt),
+                PasswordHash=COALESCE($hash, PasswordHash)
             WHERE Email=$email COLLATE NOCASE;
             """;
         command.Parameters.AddWithValue("$fullName", fullName);
         command.Parameters.AddWithValue("$phone", phoneNumber);
         command.Parameters.AddWithValue("$pharmacy", pharmacyName);
+        command.Parameters.Add("$salt", SqliteType.Blob).Value = (object?)newSalt ?? DBNull.Value;
+        command.Parameters.Add("$hash", SqliteType.Blob).Value = (object?)newHash ?? DBNull.Value;
         command.Parameters.AddWithValue("$email", email);
-        return command.ExecuteNonQuery() > 0;
+        var updated = command.ExecuteNonQuery() > 0;
+        transaction.Commit();
+        return updated;
     }
 
     public bool ChangePassword(string email, string currentPassword, string newPassword)

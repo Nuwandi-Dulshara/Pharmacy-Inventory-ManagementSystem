@@ -261,6 +261,13 @@ h1 { margin: 22px 0 0; color: var(--ink); font-size: clamp(42px, 5vw, 58px); lin
 .medicine-batches-panel input[type="file"] { max-width: 260px; }
 .medicine-detail-panel form { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .medicine-detail-panel form input { min-height: 42px; border: 1px solid #dce6de; border-radius: 9px; padding: 0 10px; }
+.pos-catalog { max-height: 240px; display: grid; gap: 7px; overflow-y: auto; margin: 12px 0 20px; }
+.pos-catalog-item { min-height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--line); border-radius: 9px; padding: 8px 11px; }
+.pos-catalog-item > span { min-width: 0; display: grid; gap: 4px; }
+.pos-catalog-item strong { overflow: hidden; color: var(--ink); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.pos-catalog-item small { color: var(--muted); font-size: 9px; }
+.medicine-table input[type="number"] { width: 90px; min-height: 36px; border: 1px solid #dce6de; border-radius: 7px; padding: 5px 8px; background: white; color: var(--ink); }
+.pos-total { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 21px; color: var(--forest); font-size: 16px; }
 @media print {
     .site-header, .app-sidebar, .site-footer, .page-heading .button, .medicine-detail-panel form { display: none !important; }
     .app-shell { display: block; }
@@ -343,4 +350,91 @@ h1 { margin: 22px 0 0; color: var(--ink); font-size: clamp(42px, 5vw, 58px); lin
     .medicine-description-field, .medicine-info-list .medicine-description { grid-column: auto; }
     .medicine-form-actions { flex-direction: column-reverse; }
     .medicine-form-actions .button { width: 100%; }
+}
+
+body[data-theme="dark"] {
+    color-scheme: dark;
+    --white: #101914;
+    --forest: #70b887;
+    --forest-deep: #5da477;
+    --leaf: #20372a;
+    --ink: #e4eee7;
+    --muted: #a6b5aa;
+    --line: #2b3b31;
+    background: #101914;
+}
+body[data-theme="dark"] .site-header,
+body[data-theme="dark"] .button-outline,
+body[data-theme="dark"] .preview-card,
+body[data-theme="dark"] .alert-float,
+body[data-theme="dark"] .feature-card,
+body[data-theme="dark"] .stat-tile,
+body[data-theme="dark"] .dashboard-stat,
+body[data-theme="dark"] .panel,
+body[data-theme="dark"] .medicine-form .field input,
+body[data-theme="dark"] .medicine-form .field select,
+body[data-theme="dark"] .medicine-form .field textarea,
+body[data-theme="dark"] .medicine-search input,
+body[data-theme="dark"] .medicine-search select,
+body[data-theme="dark"] .filter-select,
+body[data-theme="dark"] .medicine-detail-panel form input {
+    border-color: #34483a;
+    background-color: #18251d;
+    color: var(--ink);
+}
+body[data-theme="dark"] .medicine-table input[type="number"] {
+    border-color: #34483a;
+    background: #18251d;
+    color: var(--ink);
+}
+body[data-theme="dark"] .features-section,
+body[data-theme="dark"] .app-sidebar,
+body[data-theme="dark"] .site-footer {
+    background: #131e17;
+}
+body[data-theme="dark"] .site-footer,
+body[data-theme="dark"] .site-footer strong,
+body[data-theme="dark"] .field > label,
+body[data-theme="dark"] .medicine-form .field > label,
+body[data-theme="dark"] .sidebar-link,
+body[data-theme="dark"] .sidebar-icon {
+    color: var(--muted);
+}
+body[data-theme="dark"] .sidebar-link:hover,
+body[data-theme="dark"] .sidebar-link.is-active {
+    background: #20372a;
+    color: #b7e0c3;
+}
+body[data-theme="dark"] .medicine-table td,
+body[data-theme="dark"] .dashboard-table td,
+body[data-theme="dark"] .medicine-info-list > div,
+body[data-theme="dark"] .alert-row {
+    border-color: #29382e;
+}
+body[data-theme="dark"] .medicine-message {
+    border-color: #315d3d;
+    background: #1b3021;
+    color: #b7e0c3;
+}
+body[data-theme="dark"] .medicine-message-error {
+    border-color: #70413c;
+    background: #33201e;
+    color: #f0aaa3;
+}
+body[data-theme="dark"] .auth-aside {
+    background: #103b2b;
+}
+body[data-theme="dark"] .status-active {
+    background: #20372a;
+    color: #b7e0c3;
+}
+body[data-theme="dark"] .status-inactive {
+    background: #303833;
+    color: #c1cbc4;
+}
+body[data-theme="dark"] .medicine-form .field input:focus,
+body[data-theme="dark"] .medicine-form .field select:focus,
+body[data-theme="dark"] .medicine-form .field textarea:focus,
+body[data-theme="dark"] .medicine-search input:focus {
+    box-shadow: 0 0 0 3px #294833;
 }

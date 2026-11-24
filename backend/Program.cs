@@ -24,6 +24,9 @@ builder.Services.AddSingleton<AuthService>();
 builder.Services.AddDbContext<MediStockDbContext>((serviceProvider, options) =>
     options.UseSqlite(serviceProvider.GetRequiredService<AuthService>().ConnectionString));
 builder.Services.AddScoped<DashboardService>();
+builder.Services.AddScoped<AppSettingsService>();
+builder.Services.AddSingleton<PdfExportService>();
+builder.Services.AddScoped<DemandPredictionService>();
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

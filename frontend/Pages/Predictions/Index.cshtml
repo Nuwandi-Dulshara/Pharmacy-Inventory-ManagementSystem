@@ -1,5 +1,28 @@
 @page
 @model MediStock.Pages.Predictions.IndexModel
 @{ViewData["Title"]="AI stock prediction";}
-<section class="medicine-page wrap"><div class="page-heading"><div><span class="section-kicker">AI STOCK PLANNING</span><h1>Demand prediction</h1><p>Estimate future demand using historical completed sales. These are estimates only.</p></div></div><section class="panel medicine-form"><form method="get" class="medicine-form-grid"><div class="field"><label>Medicine</label><select name="MedicineId" asp-items="Model.Medicines"></select></div><div class="field"><label>Forecast period</label><select name="Days"><option value="7" selected="@(Model.Days==7)">Next 7 days</option><option value="30" selected="@(Model.Days==30)">Next 30 days</option></select></div><div class="medicine-form-actions" style="grid-column:1/-1"><button class="button button-primary">Predict demand</button></div></form></section>
-@if(Model.PredictedQuantity.HasValue){<section class="panel medicine-batches-panel"><h2>Predicted demand: @Model.PredictedQuantity units</h2><p>Current stock: @Model.CurrentStock units</p><p><strong>@(Model.CurrentStock<Model.PredictedQuantity?"Possible stock shortage":"Stock level appears sufficient")</strong></p><small>Estimate based on recent sales history.</small></section>}</section>
+<section class="medicine-page wrap">
+    <div class="page-heading"><div><span class="section-kicker">AI STOCK PLANNING</span><h1>Demand prediction</h1><p>ML.NET estimates based on historical completed sales. These estimates are not guarantees.</p></div></div>
+    <section class="panel medicine-form">
+        <form method="get" class="medicine-form-grid">
+            <div class="field"><label>Medicine</label><select name="MedicineId" asp-items="Model.Medicines"></select></div>
+            <div class="field"><label>Forecast period</label><select name="Days"><option value="7" selected="@(Model.Days==7)">Next 7 days</option><option value="30" selected="@(Model.Days==30)">Next 30 days</option></select></div>
+            <div class="medicine-form-actions" style="grid-column:1/-1"><button class="button button-primary">Predict demand</button></div>
+        </form>
+    </section>
+    @if(Model.Forecast is { HasEnoughHistory: true } forecast)
+    {
+        <section class="panel medicine-batches-panel">
+            <h2>Estimated demand: @forecast.PredictedQuantity units over @Model.Days days</h2>
+            <p>Usable stock today: @forecast.CurrentStock units</p>
+            <p>Stock unexpired through day @Model.Days: @forecast.StockAvailableThroughForecast units</p>
+            <p class="@(forecast.StockAvailableThroughForecast<forecast.PredictedQuantity?"medicine-message-error":"")"><strong>@(forecast.StockAvailableThroughForecast<forecast.PredictedQuantity?"Possible stock shortage":"Stock level appears sufficient")</strong></p>
+            <small>Model trained with 180 days of sales history, including @forecast.ActiveSalesDays days with sales. Forecast values are estimates only.</small>
+            @if(Model.ChartDataUrl is not null){<div class="sales-chart"><img src="@Model.ChartDataUrl" alt="Estimated demand over the next @Model.Days days"/></div>}
+        </section>
+    }
+    else if(Model.MedicineId > 0)
+    {
+        <section class="panel medicine-batches-panel"><h2>Not enough sales history</h2><p>At least 7 days with completed sales are needed to create an estimate. No demand estimate has been generated.</p></section>
+    }
+</section>
