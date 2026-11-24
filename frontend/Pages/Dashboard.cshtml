@@ -9,8 +9,8 @@
     <div class="dashboard-heading">
         <div>
             <span class="section-kicker">PHARMACY OVERVIEW</span>
-            <h1>Good to see you, @User.Identity?.Name.</h1>
-            <p>Here’s what’s happening at <strong>@User.FindFirst("PharmacyName")?.Value</strong>.</p>
+            <h1>Dashboard</h1>
+            <p>@User.FindFirst("PharmacyName")?.Value</p>
         </div>
         <div class="dashboard-actions">
             <a class="button button-outline" asp-page="/Medicines/Create">
@@ -21,8 +21,6 @@
             </a>
         </div>
     </div>
-    <p class="implementation-note">Add and manage your pharmacy’s medicine records.</p>
-
     <div class="dashboard-stat-grid">
         <article class="dashboard-stat">
             <div class="stat-icon">✚</div>

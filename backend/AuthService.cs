@@ -134,6 +134,16 @@ public sealed class AuthService
                 AdjustedAtUtc TEXT NOT NULL
             );
 
+            CREATE TABLE IF NOT EXISTS StockReservations (
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                CartId TEXT NOT NULL,
+                MedicineId INTEGER NOT NULL REFERENCES Medicines(Id) ON DELETE RESTRICT,
+                StockBatchId INTEGER NOT NULL REFERENCES StockBatches(Id) ON DELETE RESTRICT,
+                Quantity INTEGER NOT NULL CHECK (Quantity > 0),
+                UnitPrice INTEGER NOT NULL CHECK (UnitPrice >= 0),
+                ReservedAtUtc TEXT NOT NULL
+            );
+
             CREATE TABLE IF NOT EXISTS RefundHistory (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 SaleId INTEGER NOT NULL UNIQUE REFERENCES Sales(Id) ON DELETE RESTRICT,
@@ -149,6 +159,7 @@ public sealed class AuthService
             CREATE INDEX IF NOT EXISTS IX_StockBatches_Medicine_Expiry ON StockBatches(MedicineId, ExpiryDate);
             CREATE INDEX IF NOT EXISTS IX_Sales_SoldAtUtc ON Sales(SoldAtUtc);
             CREATE INDEX IF NOT EXISTS IX_SaleItems_SaleId ON SaleItems(SaleId);
+            CREATE INDEX IF NOT EXISTS IX_StockReservations_CartId_MedicineId ON StockReservations(CartId, MedicineId);
             """;
         command.ExecuteNonQuery();
 
@@ -401,15 +412,19 @@ public sealed class AuthService
     {
         var fullSource = Path.GetFullPath(sourcePath);
         if (!File.Exists(fullSource)) throw new FileNotFoundException("Backup file not found.", fullSource);
-        using var source = new SqliteConnection(new SqliteConnectionStringBuilder
+        using (var source = new SqliteConnection(new SqliteConnectionStringBuilder
         {
             DataSource = fullSource,
             Mode = SqliteOpenMode.ReadOnly
-        }.ToString());
-        source.Open();
-        using var destination = new SqliteConnection(ConnectionString);
-        destination.Open();
-        source.BackupDatabase(destination);
+        }.ToString()))
+        {
+            source.Open();
+            using var destination = new SqliteConnection(ConnectionString);
+            destination.Open();
+            source.BackupDatabase(destination);
+        }
+
+        Initialize();
     }
 
     private static void AddColumnIfMissing(SqliteConnection connection, string tableName, string columnName, string definition)

@@ -174,16 +174,18 @@ public sealed class FeatureTests
         await database.SaveChangesAsync();
 
         using var loggerFactory = LoggerFactory.Create(builder => builder.SetMinimumLevel(LogLevel.None));
-        var page = new CreateModel(database, loggerFactory.CreateLogger<CreateModel>())
-        {
-            Input = new SaleInput
-            {
-                PaymentMethod = "Cash",
-                Items = [new SaleLineInput { MedicineId = firstMedicine.Id, Quantity = 2 },
-                         new SaleLineInput { MedicineId = secondMedicine.Id, Quantity = 3 }]
-            }
-        };
-        AttachPageContext(page, new ClaimsPrincipal());
+        var cartId = Guid.NewGuid().ToString("N");
+        var page = new CreateModel(
+            database,
+            new StockReservationCleanupService(database),
+            loggerFactory.CreateLogger<CreateModel>());
+        AttachPageContext(page, new ClaimsPrincipal(), $"MediStock.SaleCart={cartId}");
+        Assert.IsType<RedirectToPageResult>(
+            await page.OnPostAddAsync(firstMedicine.Id, 2, CancellationToken.None));
+        Assert.Equal(3, (await database.StockBatches.FindAsync(firstBatch.Id))!.Quantity);
+        Assert.IsType<RedirectToPageResult>(
+            await page.OnPostAddAsync(secondMedicine.Id, 3, CancellationToken.None));
+        page.Input.PaymentMethod = "Cash";
         var result = await page.OnPostAsync(CancellationToken.None);
 
         Assert.IsType<RedirectToPageResult>(result);
@@ -194,12 +196,97 @@ public sealed class FeatureTests
         Assert.Equal(1, (await database.StockBatches.FindAsync(secondBatch.Id))!.Quantity);
         Assert.Equal(100, (await database.StockBatches.FindAsync(expiredBatch.Id))!.Quantity);
 
-        page.Input.Items = [new SaleLineInput { MedicineId = firstMedicine.Id, Quantity = 100 }];
-        var insufficientResult = await page.OnPostAsync(CancellationToken.None);
+        var insufficientResult = await page.OnPostAddAsync(firstMedicine.Id, 100, CancellationToken.None);
         Assert.IsType<PageResult>(insufficientResult);
         Assert.Equal(1, await database.Sales.CountAsync());
         await database.Entry(firstBatch).ReloadAsync();
         Assert.Equal(3, (await database.StockBatches.FindAsync(firstBatch.Id))!.Quantity);
+    }
+
+    [Fact]
+    public async Task PosSearchAndCartRemovalOrCancellationHandleReservations()
+    {
+        await using var store = await CreateDatabaseAsync();
+        var database = store.Context;
+        var (medicine, supplier) = await SeedMedicineAndSupplierAsync(database);
+        var batch = new StockBatch
+        {
+            MedicineId = medicine.Id,
+            SupplierId = supplier.Id,
+            BatchNumber = "B-1",
+            Quantity = 10,
+            PurchasePrice = 1,
+            ExpiryDate = DateTime.UtcNow.AddMonths(3),
+            CreatedUtc = DateTime.UtcNow
+        };
+        database.StockBatches.Add(batch);
+        await database.SaveChangesAsync();
+
+        using var loggerFactory = LoggerFactory.Create(builder => builder.SetMinimumLevel(LogLevel.None));
+        var cartId = Guid.NewGuid().ToString("N");
+        var page = new CreateModel(
+            database,
+            new StockReservationCleanupService(database),
+            loggerFactory.CreateLogger<CreateModel>());
+        AttachPageContext(page, new ClaimsPrincipal(), $"MediStock.SaleCart={cartId}");
+
+        await page.OnGetAsync(CancellationToken.None);
+        Assert.Empty(page.Medicines);
+        Assert.Empty(page.CartItems);
+
+        page.Search = "Test";
+        await page.OnGetAsync(CancellationToken.None);
+        Assert.Single(page.Medicines);
+        Assert.Equal(10, page.Medicines[0].AvailableQuantity);
+
+        Assert.IsType<RedirectToPageResult>(
+            await page.OnPostAddAsync(medicine.Id, 4, CancellationToken.None));
+        Assert.Equal(6, (await database.StockBatches.SingleAsync()).Quantity);
+        Assert.IsType<RedirectToPageResult>(
+            await page.OnPostRemoveAsync(medicine.Id, CancellationToken.None));
+        Assert.Equal(10, (await database.StockBatches.SingleAsync()).Quantity);
+
+        Assert.IsType<RedirectToPageResult>(
+            await page.OnPostAddAsync(medicine.Id, 3, CancellationToken.None));
+        Assert.Equal(7, (await database.StockBatches.SingleAsync()).Quantity);
+        page.Search = "Test";
+        await page.OnGetAsync(CancellationToken.None);
+        Assert.Equal(10, page.Medicines.Single().AvailableQuantity);
+
+        var otherCartPage = new CreateModel(
+            database,
+            new StockReservationCleanupService(database),
+            loggerFactory.CreateLogger<CreateModel>())
+        {
+            Search = "Test"
+        };
+        AttachPageContext(otherCartPage, new ClaimsPrincipal(), $"MediStock.SaleCart={Guid.NewGuid():N}");
+        await otherCartPage.OnGetAsync(CancellationToken.None);
+        Assert.Equal(7, otherCartPage.Medicines.Single().AvailableQuantity);
+
+        batch.ExpiryDate = DateTime.UtcNow.Date.AddDays(-1);
+        await database.SaveChangesAsync();
+        Assert.IsType<PageResult>(await page.OnPostAsync(CancellationToken.None));
+        Assert.Empty(await database.Sales.ToListAsync());
+        Assert.Equal(7, (await database.StockBatches.SingleAsync()).Quantity);
+        Assert.IsType<RedirectToPageResult>(await page.OnPostCancelAsync(CancellationToken.None));
+        Assert.Equal(10, (await database.StockBatches.SingleAsync()).Quantity);
+        Assert.Empty(await database.StockReservations.ToListAsync());
+
+        batch.Quantity = 7;
+        database.StockReservations.Add(new StockReservation
+        {
+            CartId = Guid.NewGuid().ToString("N"),
+            MedicineId = medicine.Id,
+            StockBatchId = batch.Id,
+            Quantity = 3,
+            UnitPrice = medicine.SellingPrice,
+            ReservedAtUtc = DateTime.UtcNow.AddHours(-9)
+        });
+        await database.SaveChangesAsync();
+        await new StockReservationCleanupService(database).ReleaseExpiredAsync(CancellationToken.None);
+        Assert.Equal(10, (await database.StockBatches.SingleAsync()).Quantity);
+        Assert.Empty(await database.StockReservations.ToListAsync());
     }
 
     [Fact]
@@ -365,6 +452,7 @@ public sealed class FeatureTests
         var page = new MediStock.Pages.Stock.IndexModel(
             database,
             new AppSettingsService(database),
+            new StockReservationCleanupService(database),
             loggerFactory.CreateLogger<MediStock.Pages.Stock.IndexModel>());
         AttachPageContext(page, new ClaimsPrincipal());
         await page.OnGetAsync(CancellationToken.None);
@@ -527,6 +615,47 @@ public sealed class FeatureTests
         }
     }
 
+    [Fact]
+    public void RestoringAnOlderBackupCreatesTheStockReservationTable()
+    {
+        var originalDatabasePath = Environment.GetEnvironmentVariable("MEDISTOCK_DATABASE_PATH");
+        var temporaryDirectory = Path.Combine(Path.GetTempPath(), $"medistock-tests-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(temporaryDirectory);
+        var databasePath = Path.Combine(temporaryDirectory, "test.db");
+        var backupPath = Path.Combine(temporaryDirectory, "backup.db");
+        try
+        {
+            Environment.SetEnvironmentVariable("MEDISTOCK_DATABASE_PATH", databasePath);
+            var auth = new AuthService();
+            auth.Initialize();
+            auth.BackupDatabase(backupPath);
+
+            using (var backup = new SqliteConnection($"Data Source={backupPath}"))
+            {
+                backup.Open();
+                using var command = backup.CreateCommand();
+                command.CommandText = "DROP TABLE StockReservations;";
+                command.ExecuteNonQuery();
+            }
+
+            auth.RestoreDatabase(backupPath);
+            using var restored = new SqliteConnection(auth.ConnectionString);
+            restored.Open();
+            using var verify = restored.CreateCommand();
+            verify.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = 'StockReservations';";
+            Assert.Equal(1L, verify.ExecuteScalar());
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("MEDISTOCK_DATABASE_PATH", originalDatabasePath);
+            SqliteConnection.ClearAllPools();
+            if (Directory.Exists(temporaryDirectory))
+            {
+                Directory.Delete(temporaryDirectory, recursive: true);
+            }
+        }
+    }
+
     private static async Task<TestDatabase> CreateDatabaseAsync()
     {
         var connection = new SqliteConnection("Data Source=:memory:");
@@ -558,9 +687,14 @@ public sealed class FeatureTests
         return (medicine, supplier);
     }
 
-    private static void AttachPageContext(PageModel page, ClaimsPrincipal user)
+    private static void AttachPageContext(PageModel page, ClaimsPrincipal user, string? cookie = null)
     {
         var httpContext = new DefaultHttpContext { User = user };
+        if (cookie is not null)
+        {
+            httpContext.Request.Headers.Cookie = cookie;
+        }
+
         var actionContext = new ActionContext(
             httpContext,
             new Microsoft.AspNetCore.Routing.RouteData(),

@@ -10,7 +10,7 @@
         </Grid.RowDefinitions>
         <StackPanel>
             <TextBlock Text="Demand prediction" FontSize="28" FontWeight="SemiBold" />
-            <TextBlock Text="ML.NET estimates based on historical daily sales; predictions are estimates, not guarantees."
+            <TextBlock Text="Forecasts are based on historical daily sales."
                        Foreground="{DynamicResource MutedBrush}" Margin="0,3,0,12" />
             <StackPanel Orientation="Horizontal">
                 <ComboBox x:Name="MedicineBox" Width="390" DisplayMemberPath="Display" />
@@ -33,7 +33,7 @@
                 <DataGridTextColumn Header="Estimated units" Binding="{Binding Units, StringFormat=N1}" Width="180" />
             </DataGrid.Columns>
         </DataGrid>
-        <TextBlock Grid.Row="3" Text="Available stock excludes expired batches. Compare this estimate with upcoming demand before reordering."
+        <TextBlock Grid.Row="3" Text="Available stock excludes expired batches."
                    Foreground="{DynamicResource MutedBrush}" Margin="0,12,0,0" TextWrapping="Wrap" />
     </Grid>
 </UserControl>

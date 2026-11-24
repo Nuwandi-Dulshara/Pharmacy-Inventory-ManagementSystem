@@ -1,8 +1,8 @@
 @page
 @model MediStock.Pages.Predictions.IndexModel
-@{ViewData["Title"]="AI stock prediction";}
+@{ViewData["Title"]="Demand forecast";}
 <section class="medicine-page wrap">
-    <div class="page-heading"><div><span class="section-kicker">AI STOCK PLANNING</span><h1>Demand prediction</h1><p>ML.NET estimates based on historical completed sales. These estimates are not guarantees.</p></div></div>
+    <div class="page-heading"><div><span class="section-kicker">SALES HISTORY</span><h1>Demand forecast</h1><p>Estimates are based on historical completed sales.</p></div></div>
     <section class="panel medicine-form">
         <form method="get" class="medicine-form-grid">
             <div class="field"><label>Medicine</label><select name="MedicineId" asp-items="Model.Medicines"></select></div>
@@ -17,7 +17,7 @@
             <p>Usable stock today: @forecast.CurrentStock units</p>
             <p>Stock unexpired through day @Model.Days: @forecast.StockAvailableThroughForecast units</p>
             <p class="@(forecast.StockAvailableThroughForecast<forecast.PredictedQuantity?"medicine-message-error":"")"><strong>@(forecast.StockAvailableThroughForecast<forecast.PredictedQuantity?"Possible stock shortage":"Stock level appears sufficient")</strong></p>
-            <small>Model trained with 180 days of sales history, including @forecast.ActiveSalesDays days with sales. Forecast values are estimates only.</small>
+            <small>Based on 180 days of sales history; @forecast.ActiveSalesDays days had sales. Forecasts are estimates.</small>
             @if(Model.ChartDataUrl is not null){<div class="sales-chart"><img src="@Model.ChartDataUrl" alt="Estimated demand over the next @Model.Days days"/></div>}
         </section>
     }

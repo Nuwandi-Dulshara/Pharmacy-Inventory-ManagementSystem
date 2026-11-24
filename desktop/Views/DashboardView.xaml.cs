@@ -9,7 +9,7 @@ public partial class DashboardView : UserControl
     public DashboardView(DesktopServices services, AuthenticatedUser user)
     {
         InitializeComponent();
-        WelcomeText.Text = $"Welcome, {user.FullName} — {user.PharmacyName}";
+        WelcomeText.Text = $"Pharmacy: {user.PharmacyName}";
         using var db = services.CreateDbContext();
         var now = DateTime.UtcNow;
         var lowStock = ParseSetting(services.GetSetting("LowStockQuantity", "10"), 10);

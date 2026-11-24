@@ -21,8 +21,8 @@
                 <TextBlock x:Name="ErrorText" Foreground="{DynamicResource DangerBrush}"
                            TextWrapping="Wrap" Margin="0,0,0,8" />
                 <Button Content="Sign in" Click="SignIn_Click" Height="40" />
-                <TextBlock Text="Use an existing MediStock account. Accounts are shared with the web application."
-                           TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource MutedBrush}"
+                <TextBlock Text="Use your MediStock account. This app shares data with the web application."
+                           TextWrapping="Wrap" FontSize="14" Foreground="{DynamicResource MutedBrush}"
                            Margin="0,8,0,0" />
             </StackPanel>
         </Border>

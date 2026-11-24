@@ -9,7 +9,7 @@
         </Grid.RowDefinitions>
         <StackPanel>
             <TextBlock Text="Reports" FontSize="28" FontWeight="SemiBold" />
-            <TextBlock Text="Generate date-filtered sales, stock, expiry, and supplier reports. Exports use the active filters."
+            <TextBlock Text="Filter and export sales, stock, expiry, and supplier reports."
                        Foreground="{DynamicResource MutedBrush}" Margin="0,3,0,12" />
             <Border Background="{DynamicResource SurfaceBrush}" Padding="12" Margin="0,0,0,12"
                     BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="8">

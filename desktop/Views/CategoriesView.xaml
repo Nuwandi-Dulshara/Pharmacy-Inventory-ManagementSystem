@@ -9,7 +9,7 @@
         </Grid.RowDefinitions>
         <StackPanel>
             <TextBlock Text="Categories" FontSize="28" FontWeight="SemiBold" />
-            <TextBlock Text="Create and maintain medicine categories. Categories in use by medicines cannot be deleted."
+            <TextBlock Text="Add, edit, and search medicine categories. In-use categories cannot be deleted."
                        Foreground="{DynamicResource MutedBrush}" Margin="0,3,0,12" />
             <Border Background="{DynamicResource SurfaceBrush}" Padding="12" Margin="0,0,0,12"
                     BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="8">

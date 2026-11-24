@@ -11,6 +11,7 @@ namespace MediStock.Pages.Stock;
 public sealed class IndexModel(
     MediStockDbContext db,
     AppSettingsService settingsService,
+    StockReservationCleanupService reservationCleanup,
     ILogger<IndexModel> logger) : PageModel
 {
     [BindProperty(SupportsGet = true)]
@@ -31,6 +32,7 @@ public sealed class IndexModel(
 
     public async Task OnGetAsync(CancellationToken cancellationToken)
     {
+        await reservationCleanup.ReleaseExpiredAsync(cancellationToken);
         LowStockQuantity = await settingsService.GetIntAsync("LowStockQuantity", 10, cancellationToken);
         ExpiryWarningDays = await settingsService.GetIntAsync("ExpiryWarningDays", 30, cancellationToken);
         var today = DateTime.UtcNow.Date;
@@ -83,6 +85,7 @@ public sealed class IndexModel(
                     .Sum(available => (int?)available.Quantity) ?? 0,
                 batch.Quantity == 0 &&
                 !db.SaleItems.Any(item => item.StockBatchId == batch.Id) &&
+                !db.StockReservations.Any(reservation => reservation.StockBatchId == batch.Id) &&
                 !db.StockAdjustments.Any(adjustment => adjustment.StockBatchId == batch.Id)))
             .ToListAsync(cancellationToken);
     }
@@ -98,6 +101,7 @@ public sealed class IndexModel(
 
         if (batch.Quantity > 0 ||
             await db.SaleItems.AnyAsync(item => item.StockBatchId == id, cancellationToken) ||
+            await db.StockReservations.AnyAsync(reservation => reservation.StockBatchId == id, cancellationToken) ||
             await db.StockAdjustments.AnyAsync(adjustment => adjustment.StockBatchId == id, cancellationToken))
         {
             ErrorMessage = "Used stock records cannot be deleted. Only unused, empty batches can be deleted.";

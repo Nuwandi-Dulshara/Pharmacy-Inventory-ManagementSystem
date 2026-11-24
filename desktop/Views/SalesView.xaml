@@ -7,7 +7,7 @@
         </Grid.RowDefinitions>
         <StackPanel>
             <TextBlock Text="Sales / POS" FontSize="28" FontWeight="SemiBold" />
-            <TextBlock Text="Add medicines to the cart; stock is checked and deducted together when the sale is committed."
+            <TextBlock Text="Stock is deducted when the sale is completed."
                        Foreground="{DynamicResource MutedBrush}" Margin="0,3,0,14" />
             <Border Background="{DynamicResource SurfaceBrush}" Padding="12" Margin="0,0,0,12"
                     BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="8">
