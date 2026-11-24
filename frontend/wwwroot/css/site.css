@@ -1,18 +1,18 @@
 :root {
     color-scheme: light;
-    --forest: #174c37;
-    --forest-deep: #103b2b;
-    --leaf: #eaf4ec;
-    --ink: #1c3027;
-    --muted: #718077;
-    --line: #e6ece7;
+    --forest: #176b4d;
+    --forest-deep: #115a41;
+    --leaf: #e4f2ea;
+    --ink: #18352b;
+    --muted: #66766f;
+    --line: #dce5df;
     --white: #fff;
     font-family: "Segoe UI", Inter, Arial, sans-serif;
 }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--white); color: var(--ink); }
+body { margin: 0; background: #f4f7f5; color: var(--ink); }
 a { color: inherit; text-decoration: none; }
 button, input, select, textarea { font: inherit; }
 .site-header { height: 82px; padding: 0 max(36px, calc((100% - 1180px) / 2)); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f1f3f1; background: #fff; }
@@ -198,6 +198,39 @@ h1 { margin: 22px 0 0; color: var(--ink); font-size: clamp(42px, 5vw, 58px); lin
 .app-main > .wrap { width: min(1180px, calc(100% - 64px)); }
 
 .medicine-page { padding-block: 42px 65px; }
+.app-main { background: #f7faf8; }
+.panel, .dashboard-stat, .feature-card { box-shadow: 0 3px 14px #173e2d08; }
+.medicine-page .panel { border-color: var(--line); }
+.panel, .dashboard-stat, .feature-card { border-radius: 16px; }
+.medicine-table th, .dashboard-table th { border-bottom: 1px solid var(--line); background: #f7faf8; }
+.medicine-table tbody tr:hover td, .dashboard-table tbody tr:hover td { background: #f8fbf9; }
+.medicine-form .field input:focus, .medicine-form .field select:focus, .medicine-form .field textarea:focus,
+.medicine-search input:focus, .medicine-search select:focus, .pos-quantity-control input:focus {
+    border-color: #70a582;
+    box-shadow: 0 0 0 3px #e4f2ea;
+    outline: none;
+}
+.app-main .page-heading { margin-bottom: 24px; }
+.pos-search-panel { padding: 0 19px 16px; }
+.pos-search-panel .medicine-search label { color: #30483b; font-weight: 700; }
+.pos-search-panel .medicine-search input { flex: 1 1 260px; }
+.pos-empty-results { margin: 12px 0 0; color: var(--muted); }
+.pos-cart-panel { margin-top: 16px; }
+.pos-add-form { display: flex; align-items: center; gap: 9px; }
+.pos-quantity-control { display: inline-flex; align-items: center; gap: 5px; }
+.pos-quantity-control input { width: 72px; min-height: 40px; border: 1px solid #dce6de; border-radius: 8px; padding: 5px 8px; background: white; color: var(--ink); text-align: center; }
+.quantity-button { width: 36px; height: 36px; border: 1px solid #dce6de; border-radius: 8px; background: white; color: var(--forest); font-size: 19px; cursor: pointer; }
+.quantity-button:hover { border-color: #9cbea5; background: var(--leaf); }
+.pos-checkout { margin-top: 15px; border-top: 1px solid #eef2ee; padding-top: 5px; }
+.pos-payment-form { display: grid; grid-template-columns: minmax(180px, .7fr) minmax(220px, 1.3fr); gap: 8px 24px; align-items: end; }
+.pos-total { padding-top: 0; }
+.pos-payment-form .medicine-form-actions { grid-column: 1 / -1; margin-top: 12px; }
+.medicine-page .validation-summary:not(:empty) { margin-bottom: 15px; border: 1px solid #efd0cd; border-radius: 9px; padding: 11px 13px; background: #fff7f6; }
+.app-main :focus-visible { outline: 3px solid #8bb99a; outline-offset: 2px; }
+.brand-mark { position: relative; }
+.site-header { box-shadow: 0 2px 10px #173e2d08; }
+.app-sidebar { background: #f8faf8; }
+.button, .sidebar-link { transition: background .16s ease, color .16s ease, transform .16s ease, border-color .16s ease; }
 .page-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 22px; }
 .page-heading h1 { margin: 7px 0 0; font-size: clamp(26px, 3vw, 35px); letter-spacing: -1.1px; }
 .page-heading p { margin: 8px 0 0; color: var(--muted); font-size: 13px; }
@@ -323,6 +356,9 @@ h1 { margin: 22px 0 0; color: var(--ink); font-size: clamp(42px, 5vw, 58px); lin
     .page-heading > .button { flex: 0 0 auto; padding-inline: 12px; font-size: 11px; }
     .medicine-details-grid { grid-template-columns: 1fr; }
     .medicine-stock-summary { min-height: 160px; }
+    .pos-add-form { width: 100%; justify-content: space-between; flex-wrap: wrap; }
+    .pos-payment-form { grid-template-columns: 1fr; }
+    .pos-total, .pos-payment-form .medicine-form-actions { grid-column: 1; }
 }
 @media (max-width: 430px) {
     .brand-copy small { font-size: 8px; }
@@ -375,6 +411,8 @@ body[data-theme="dark"] .medicine-form .field input,
 body[data-theme="dark"] .medicine-form .field select,
 body[data-theme="dark"] .medicine-form .field textarea,
 body[data-theme="dark"] .medicine-search input,
+body[data-theme="dark"] .pos-quantity-control input,
+body[data-theme="dark"] .quantity-button,
 body[data-theme="dark"] .medicine-search select,
 body[data-theme="dark"] .filter-select,
 body[data-theme="dark"] .medicine-detail-panel form input {
@@ -389,7 +427,8 @@ body[data-theme="dark"] .medicine-table input[type="number"] {
 }
 body[data-theme="dark"] .features-section,
 body[data-theme="dark"] .app-sidebar,
-body[data-theme="dark"] .site-footer {
+body[data-theme="dark"] .site-footer,
+body[data-theme="dark"] .app-main {
     background: #131e17;
 }
 body[data-theme="dark"] .site-footer,
@@ -411,10 +450,23 @@ body[data-theme="dark"] .medicine-info-list > div,
 body[data-theme="dark"] .alert-row {
     border-color: #29382e;
 }
+body[data-theme="dark"] .medicine-table th,
+body[data-theme="dark"] .dashboard-table th {
+    border-color: #29382e;
+    background: #18251d;
+    color: var(--muted);
+}
+body[data-theme="dark"] .medicine-table tbody tr:hover td,
+body[data-theme="dark"] .dashboard-table tbody tr:hover td {
+    background: #1b2b21;
+}
 body[data-theme="dark"] .medicine-message {
     border-color: #315d3d;
     background: #1b3021;
     color: #b7e0c3;
+}
+body[data-theme="dark"] .pos-search-panel .medicine-search label {
+    color: var(--ink);
 }
 body[data-theme="dark"] .medicine-message-error {
     border-color: #70413c;
@@ -437,4 +489,11 @@ body[data-theme="dark"] .medicine-form .field select:focus,
 body[data-theme="dark"] .medicine-form .field textarea:focus,
 body[data-theme="dark"] .medicine-search input:focus {
     box-shadow: 0 0 0 3px #294833;
+}
+
+*:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6):not(strong):not(b):not(i):not(em):not(svg):not(path):not(.hero-description):not(.pos-total):not(.quantity-button) {
+    font-size: max(13px, 0.875em) !important;
+}
+.alert-float strong, .aside-note strong, .empty-state strong, .alert-row > strong, .expiry-product-name strong {
+    font-size: 13px !important;
 }

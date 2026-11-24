@@ -11,7 +11,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#174c37" />
+    <meta name="theme-color" content="#176b4d" />
     <title>@ViewData["Title"] · MediStock</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
@@ -63,7 +63,7 @@
                     <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Sales") ? "is-active" : "")" asp-page="/Sales/Index"><span class="sidebar-icon">↗</span><span>Sales / POS</span></a>
                     <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Invoices") ? "is-active" : "")" asp-page="/Invoices/Index"><span class="sidebar-icon">▱</span><span>Invoices</span></a>
                     <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Expiry") ? "is-active" : "")" asp-page="/Expiry/Index"><span class="sidebar-icon">◷</span><span>Expiry</span></a>
-                    <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Predictions") ? "is-active" : "")" asp-page="/Predictions/Index"><span class="sidebar-icon">✧</span><span>AI Prediction</span></a>
+                    <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Predictions") ? "is-active" : "")" asp-page="/Predictions/Index"><span class="sidebar-icon">✧</span><span>Demand forecast</span></a>
                     <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Reports") ? "is-active" : "")" asp-page="/Reports/Index"><span class="sidebar-icon">▥</span><span>Reports</span></a>
                     <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Profile") ? "is-active" : "")" asp-page="/Profile/Index"><span class="sidebar-icon">◉</span><span>Profile</span></a>
                     <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Settings") ? "is-active" : "")" asp-page="/Settings/Index"><span class="sidebar-icon">⚙</span><span>Settings</span></a>
@@ -88,8 +88,7 @@
     }
 
     <footer class="site-footer">
-        <span>MediStock <span class="footer-dot">·</span> A clearer way to care for your pharmacy</span>
-        <strong>Simple. Smart. In stock.</strong>
+        <span>MediStock</span>
     </footer>
     @await RenderSectionAsync("Scripts", required: false)
     <script src="~/js/site.js" asp-append-version="true"></script>

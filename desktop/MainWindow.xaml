@@ -5,7 +5,7 @@
         MinHeight="620" MinWidth="960" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="220" />
+            <ColumnDefinition Width="230" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Border Grid.Column="0" Background="{DynamicResource SurfaceBrush}"
@@ -14,7 +14,7 @@
                 <StackPanel DockPanel.Dock="Top">
                     <TextBlock Text="MediStock" FontSize="24" FontWeight="Bold"
                                Foreground="{DynamicResource AccentBrush}" Margin="2,6,0,0" />
-                    <TextBlock x:Name="UserLabel" TextWrapping="Wrap" FontSize="12"
+                    <TextBlock x:Name="UserLabel" TextWrapping="Wrap" FontSize="14"
                                Foreground="{DynamicResource MutedBrush}" Margin="2,2,0,18" />
                     <Button Content="Dashboard" Click="Dashboard_Click" HorizontalContentAlignment="Left" />
                     <Button Content="Inventory" Click="Inventory_Click" HorizontalContentAlignment="Left" />
@@ -34,7 +34,7 @@
                         Foreground="{DynamicResource TextBrush}" />
             </DockPanel>
         </Border>
-        <Grid Grid.Column="1" Margin="24">
+        <Grid Grid.Column="1" Margin="28">
             <ContentControl x:Name="PageHost" />
         </Grid>
     </Grid>

@@ -91,6 +91,19 @@ public sealed class StockAdjustment
     public DateTime AdjustedAtUtc { get; set; }
 }
 
+public sealed class StockReservation
+{
+    public int Id { get; set; }
+    public string CartId { get; set; } = string.Empty;
+    public int MedicineId { get; set; }
+    public Medicine Medicine { get; set; } = null!;
+    public int StockBatchId { get; set; }
+    public StockBatch StockBatch { get; set; } = null!;
+    public int Quantity { get; set; }
+    public decimal UnitPrice { get; set; }
+    public DateTime ReservedAtUtc { get; set; }
+}
+
 public sealed class RefundHistory
 {
     public int Id { get; set; }

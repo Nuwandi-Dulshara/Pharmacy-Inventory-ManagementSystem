@@ -4,7 +4,7 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
             <TextBlock Text="Profile" FontSize="28" FontWeight="SemiBold" />
-            <TextBlock Text="Update your account details. Email changes are managed through the existing account system."
+            <TextBlock Text="Email addresses cannot be edited."
                        Foreground="{DynamicResource MutedBrush}" Margin="0,3,0,16" />
             <Border Background="{DynamicResource SurfaceBrush}" Padding="20"
                     BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="8"

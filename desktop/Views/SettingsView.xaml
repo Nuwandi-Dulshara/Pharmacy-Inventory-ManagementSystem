@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <StackPanel>
         <TextBlock Text="Settings" FontSize="28" FontWeight="SemiBold" />
-        <TextBlock Text="These inventory alerts use the same AppSettings records as the web application."
+        <TextBlock Text="Set low-stock and expiry alerts."
                    Foreground="{DynamicResource MutedBrush}" Margin="0,3,0,20" />
         <Border Background="{DynamicResource SurfaceBrush}" Padding="20"
                 BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="8"

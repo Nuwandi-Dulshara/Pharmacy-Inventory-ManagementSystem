@@ -6,11 +6,11 @@ public sealed class IndexModel : PageModel
 {
     public IReadOnlyList<FeatureItem> Features { get; } =
     [
-        new("✚", "Medicine Management", "Organize medicines, details, and suppliers in one place."),
-        new("▤", "Stock Tracking", "Know what’s in stock and what needs reordering."),
-        new("▱", "Sales", "Keep sales moving and daily activity easy to review."),
-        new("◷", "Expiry Alerts", "Stay ahead of important dates with timely reminders."),
-        new("✧", "AI Predictions", "Plan ahead with estimates of future stock needs.")
+        new("✚", "Medicine Management", "View medicine details and supplier information."),
+        new("▤", "Stock Tracking", "View current stock levels and batch details."),
+        new("▱", "Sales", "Record sales and review completed transactions."),
+        new("◷", "Expiry Alerts", "Review expired and upcoming stock batches."),
+        new("✧", "Demand Forecast", "View sales-based estimates of future stock needs.")
     ];
 
     public sealed record FeatureItem(string Icon, string Title, string Description);

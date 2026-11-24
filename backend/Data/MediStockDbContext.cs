@@ -12,6 +12,7 @@ public sealed class MediStockDbContext(DbContextOptions<MediStockDbContext> opti
     public DbSet<Sale> Sales => Set<Sale>();
     public DbSet<SaleItem> SaleItems => Set<SaleItem>();
     public DbSet<StockAdjustment> StockAdjustments => Set<StockAdjustment>();
+    public DbSet<StockReservation> StockReservations => Set<StockReservation>();
     public DbSet<RefundHistory> RefundHistories => Set<RefundHistory>();
     public DbSet<AppSetting> AppSettings => Set<AppSetting>();
 
@@ -87,6 +88,21 @@ public sealed class MediStockDbContext(DbContextOptions<MediStockDbContext> opti
             entity.HasOne(adjustment => adjustment.StockBatch)
                 .WithMany()
                 .HasForeignKey(adjustment => adjustment.StockBatchId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<StockReservation>(entity =>
+        {
+            entity.ToTable("StockReservations");
+            entity.HasIndex(reservation => new { reservation.CartId, reservation.MedicineId });
+            entity.Property(reservation => reservation.UnitPrice).HasConversion(moneyConverter).HasColumnType("INTEGER");
+            entity.HasOne(reservation => reservation.Medicine)
+                .WithMany()
+                .HasForeignKey(reservation => reservation.MedicineId)
+                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(reservation => reservation.StockBatch)
+                .WithMany()
+                .HasForeignKey(reservation => reservation.StockBatchId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
