@@ -1,0 +1,5 @@
+@page
+@model MediStock.Pages.Categories.CreateModel
+@{ ViewData["Title"]="Add category"; }
+<section class="medicine-page wrap"><div class="page-heading"><div><a class="back-link" asp-page="Index">← Categories</a><h1>Add category</h1></div></div>
+<form method="post" class="panel medicine-form"><div asp-validation-summary="ModelOnly" class="validation-summary"></div><div class="medicine-form-grid"><div class="field"><label asp-for="Input.Name">Category name *</label><input asp-for="Input.Name"/><span asp-validation-for="Input.Name" class="field-error"></span></div><div class="field medicine-description-field"><label asp-for="Input.Description">Description</label><textarea asp-for="Input.Description" rows="4"></textarea></div></div><div class="medicine-form-actions"><a class="button button-outline" asp-page="Index">Cancel</a><button class="button button-primary">Save category</button></div></form></section>

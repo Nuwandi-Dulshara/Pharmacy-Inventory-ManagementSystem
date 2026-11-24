@@ -1,0 +1,3 @@
+using MediStock.Data;using Microsoft.AspNetCore.Authorization;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore;
+namespace MediStock.Pages.Stock;
+[Authorize]public sealed class DetailsModel(MediStockDbContext db):PageModel{public StockBatch?Batch{get;private set;}public string Status{get;private set;}="Usable";public async Task<IActionResult>OnGetAsync(int id,CancellationToken ct){Batch=await db.StockBatches.Include(x=>x.Medicine).Include(x=>x.Supplier).AsNoTracking().SingleOrDefaultAsync(x=>x.Id==id,ct);if(Batch is null)return NotFound();Status=Batch.ExpiryDate.Date<DateTime.UtcNow.Date?"Expired":Batch.ExpiryDate.Date<=DateTime.UtcNow.Date.AddDays(30)? "Expiring soon":"Usable";return Page();}}

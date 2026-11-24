@@ -1,0 +1,71 @@
+@page
+@model MediStock.Pages.Account.RegisterModel
+@{
+    ViewData["Title"] = "Create an account";
+}
+
+<section class="auth-page wrap">
+    <aside class="auth-aside">
+        <div class="aside-icon" aria-hidden="true">✚</div>
+        <span class="section-kicker">WELCOME TO MEDISTOCK</span>
+        <h1>Better care starts behind the counter.</h1>
+        <p>Manage your pharmacy with clarity. Keep your medicines, stock, and daily operations in sync.</p>
+        <div class="aside-note">
+            <strong>YOUR DATA, YOUR DEVICE</strong>
+            <span>Account details are stored locally. Passwords are salted and securely hashed.</span>
+        </div>
+    </aside>
+    <div class="auth-content">
+        <div class="auth-heading">
+            <span class="section-kicker">GET STARTED</span>
+            <h2>Create your account</h2>
+            <p>Set up your pharmacy workspace in just a few steps.</p>
+        </div>
+        <div class="role-note"><span class="role-note-icon">✦</span>The first account registered becomes the pharmacy administrator.</div>
+        <form method="post" class="auth-form">
+            <div asp-validation-summary="ModelOnly" class="validation-summary" role="alert"></div>
+            <div class="field">
+                <label asp-for="Input.FullName">Full name</label>
+                <input asp-for="Input.FullName" autocomplete="name" placeholder="Your full name" />
+                <span asp-validation-for="Input.FullName" class="field-error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Input.PharmacyName">Pharmacy name</label>
+                <input asp-for="Input.PharmacyName" autocomplete="organization" placeholder="Your pharmacy" />
+                <span asp-validation-for="Input.PharmacyName" class="field-error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Input.Email">Email address</label>
+                <input asp-for="Input.Email" type="email" autocomplete="email" placeholder="you@example.com" />
+                <span asp-validation-for="Input.Email" class="field-error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Input.PhoneNumber">Phone number</label>
+                <input asp-for="Input.PhoneNumber" type="tel" autocomplete="tel" placeholder="+1 (555) 000-0000" />
+                <span asp-validation-for="Input.PhoneNumber" class="field-error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Input.Password">Password</label>
+                <div class="password-control">
+                    <input asp-for="Input.Password" autocomplete="new-password" placeholder="Create a password" />
+                    <button type="button" class="password-toggle" data-password-toggle="Input_Password" aria-label="Show password">Show</button>
+                </div>
+                <span asp-validation-for="Input.Password" class="field-error"></span>
+                <small class="field-hint">At least 10 characters with an uppercase letter, a lowercase letter, and a number.</small>
+            </div>
+            <div class="field">
+                <label asp-for="Input.ConfirmPassword">Confirm password</label>
+                <div class="password-control">
+                    <input asp-for="Input.ConfirmPassword" autocomplete="new-password" placeholder="Enter your password again" />
+                    <button type="button" class="password-toggle" data-password-toggle="Input_ConfirmPassword" aria-label="Show password">Show</button>
+                </div>
+                <span asp-validation-for="Input.ConfirmPassword" class="field-error"></span>
+            </div>
+            <button type="submit" class="button button-primary button-full">Register <span aria-hidden="true">→</span></button>
+        </form>
+        <p class="auth-switch">Already registered? <a asp-page="/Account/Login">Login</a></p>
+    </div>
+</section>
+@section Scripts {
+    <script src="~/js/site.js" asp-append-version="true"></script>
+}

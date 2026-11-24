@@ -1,0 +1,95 @@
+@{
+    var isAuthenticated = User.Identity?.IsAuthenticated == true;
+    var currentPath = Context.Request.Path.Value;
+    var isLandingPage = currentPath == "/" ||
+                        string.Equals(currentPath, "/Index", StringComparison.OrdinalIgnoreCase);
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#174c37" />
+    <title>@ViewData["Title"] · MediStock</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" asp-page="/Index" aria-label="MediStock home">
+            <span class="brand-mark" aria-hidden="true"><span></span></span>
+            <span class="brand-copy">
+                <strong>MediStock</strong>
+                <small>PHARMACY MANAGEMENT</small>
+            </span>
+        </a>
+        <nav class="header-actions" aria-label="Account navigation">
+            @if (isAuthenticated)
+            {
+                <span class="header-prompt">@User.Identity?.Name</span>
+                @if (isLandingPage)
+                {
+                    <a class="button button-outline button-small" asp-page="/Dashboard">Dashboard</a>
+                }
+            }
+            else
+            {
+                <span class="header-prompt">Already have an account?</span>
+                <a class="button button-outline button-small" asp-page="/Account/Login">Login</a>
+            }
+        </nav>
+    </header>
+
+    @if (isAuthenticated && !isLandingPage)
+    {
+        <div class="app-shell">
+            <aside class="app-sidebar" aria-label="Main navigation">
+                <span class="sidebar-heading">WORKSPACE</span>
+                <nav class="sidebar-nav">
+                    <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Dashboard") ? "is-active" : "")"
+                       asp-page="/Dashboard" aria-current="@(Context.Request.Path.StartsWithSegments("/Dashboard") ? "page" : null)">
+                        <span class="sidebar-icon" aria-hidden="true">⌂</span>
+                        <span>Dashboard</span>
+                    </a>
+                    <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Medicines") ? "is-active" : "")"
+                       asp-page="/Medicines/Index" aria-current="@(Context.Request.Path.StartsWithSegments("/Medicines") ? "page" : null)">
+                        <span class="sidebar-icon" aria-hidden="true">✚</span>
+                        <span>Medicine Management</span>
+                    </a>
+                    <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Categories") ? "is-active" : "")" asp-page="/Categories/Index"><span class="sidebar-icon">◇</span><span>Categories</span></a>
+                    <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Suppliers") ? "is-active" : "")" asp-page="/Suppliers/Index"><span class="sidebar-icon">♙</span><span>Suppliers</span></a>
+                    <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Stock") ? "is-active" : "")" asp-page="/Stock/Index"><span class="sidebar-icon">▤</span><span>Stock</span></a>
+                    <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Sales") ? "is-active" : "")" asp-page="/Sales/Index"><span class="sidebar-icon">↗</span><span>Sales / POS</span></a>
+                    <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Invoices") ? "is-active" : "")" asp-page="/Invoices/Index"><span class="sidebar-icon">▱</span><span>Invoices</span></a>
+                    <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Expiry") ? "is-active" : "")" asp-page="/Expiry/Index"><span class="sidebar-icon">◷</span><span>Expiry</span></a>
+                    <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Predictions") ? "is-active" : "")" asp-page="/Predictions/Index"><span class="sidebar-icon">✧</span><span>AI Prediction</span></a>
+                    <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Reports") ? "is-active" : "")" asp-page="/Reports/Index"><span class="sidebar-icon">▥</span><span>Reports</span></a>
+                    <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Profile") ? "is-active" : "")" asp-page="/Profile/Index"><span class="sidebar-icon">◉</span><span>Profile</span></a>
+                    <a class="sidebar-link @(Context.Request.Path.StartsWithSegments("/Settings") ? "is-active" : "")" asp-page="/Settings/Index"><span class="sidebar-icon">⚙</span><span>Settings</span></a>
+                </nav>
+                <form method="post" asp-page="/Dashboard" asp-page-handler="Logout" class="sidebar-logout">
+                    <button class="sidebar-link" type="submit">
+                        <span class="sidebar-icon" aria-hidden="true">↪</span>
+                        <span>Log out</span>
+                    </button>
+                </form>
+            </aside>
+            <main class="app-main">
+                @RenderBody()
+            </main>
+        </div>
+    }
+    else
+    {
+        <main>
+            @RenderBody()
+        </main>
+    }
+
+    <footer class="site-footer">
+        <span>MediStock <span class="footer-dot">·</span> A clearer way to care for your pharmacy</span>
+        <strong>Simple. Smart. In stock.</strong>
+    </footer>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>

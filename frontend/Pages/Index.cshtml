@@ -1,0 +1,71 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Smarter pharmacy operations";
+}
+
+<section class="hero wrap">
+    <div class="hero-copy">
+        <span class="eyebrow"><span class="status-dot"></span> SMARTER PHARMACY OPERATIONS</span>
+        <h1>Healthcare,<br />in better hands.</h1>
+        <p class="hero-description">
+            The simple, intelligent way to manage your pharmacy. Keep every medicine accounted for,
+            every sale moving, and every expiry in sight.
+        </p>
+        <div class="hero-actions">
+            <a class="button button-primary" asp-page="/Account/Register">Create your account <span aria-hidden="true">→</span></a>
+            <a class="button button-outline" href="#features">Explore features <span aria-hidden="true">↓</span></a>
+        </div>
+        <p class="hero-note"><span class="status-dot"></span> Everything you need to run your pharmacy, all in one place.</p>
+    </div>
+
+    <div class="preview-wrap" aria-label="MediStock dashboard preview">
+        <div class="preview-card">
+            <div class="preview-heading">
+                <div>
+                    <strong>Your pharmacy at a glance</strong>
+                    <span>A clearer view of your day</span>
+                </div>
+                <span class="today-chip">PREVIEW</span>
+            </div>
+            <div class="stat-grid">
+                <div class="stat-tile">
+                    <span class="stat-label">MEDICINE MANAGEMENT</span>
+                    <strong>Stay organized</strong>
+                    <small>Medicines and suppliers</small>
+                </div>
+                <div class="stat-tile">
+                    <span class="stat-label">STOCK TRACKING</span>
+                    <strong>Know your stock</strong>
+                    <small>Inventory at a glance</small>
+                </div>
+            </div>
+            <div class="chart-heading"><strong>Built for your pharmacy</strong><span>Simple, connected tools</span></div>
+            <div class="chart-bars" aria-hidden="true">
+                <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+            <div class="chart-days" aria-hidden="true"><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span></div>
+        </div>
+        <div class="alert-float"><span class="alert-icon">!</span><span><strong>Expiry alerts</strong><small>Stay ahead of important dates</small></span></div>
+    </div>
+</section>
+
+<section class="features-section" id="features">
+    <div class="wrap">
+        <div class="section-heading">
+            <span class="section-kicker">ONE CONNECTED WORKSPACE</span>
+            <h2>Everything your pharmacy needs</h2>
+            <p>One clear view of your inventory, sales, and what’s coming next.</p>
+        </div>
+        <div class="feature-grid">
+            @foreach (var feature in Model.Features)
+            {
+                <article class="feature-card">
+                    <div class="feature-icon" aria-hidden="true">@feature.Icon</div>
+                    <h3>@feature.Title</h3>
+                    <p>@feature.Description</p>
+                </article>
+            }
+        </div>
+    </div>
+</section>

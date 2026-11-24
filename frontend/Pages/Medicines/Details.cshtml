@@ -1,0 +1,88 @@
+@page
+@model MediStock.Pages.Medicines.DetailsModel
+@{
+    ViewData["Title"] = "Medicine details";
+}
+
+<section class="medicine-page wrap">
+    <div class="page-heading">
+        <div>
+            <a class="back-link" asp-page="Index">← Medicine Management</a>
+            <h1>@Model.Medicine!.Name</h1>
+            <p>Medicine details and available stock.</p>
+        </div>
+        <a class="button button-primary" asp-page="Edit" asp-route-id="@Model.Medicine.Id">Edit medicine</a>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+    {
+        <div class="medicine-message" role="status">@Model.StatusMessage</div>
+    }
+
+    <div class="medicine-details-grid">
+        <section class="panel medicine-detail-panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>Medicine information</h2>
+                    <p>Catalogue and pricing details</p>
+                </div>
+                <span class="medicine-status @(Model.Medicine.IsActive ? "status-active" : "status-inactive")">
+                    @(Model.Medicine.IsActive ? "Active" : "Inactive")
+                </span>
+            </div>
+            <dl class="medicine-info-list">
+                <div><dt>Generic name</dt><dd>@(Model.Medicine.GenericName ?? "—")</dd></div>
+                <div><dt>Category</dt><dd>@(Model.Medicine.Category?.Name ?? "—")</dd></div>
+                <div><dt>Brand / manufacturer</dt><dd>@(Model.Medicine.Brand ?? "—")</dd></div>
+                <div><dt>Selling price</dt><dd class="medicine-price">LKR @Model.Medicine.SellingPrice.ToString("N2")</dd></div>
+                <div class="medicine-description"><dt>Description</dt><dd>@(Model.Medicine.Description ?? "—")</dd></div>
+            </dl>
+        </section>
+
+        <section class="panel medicine-stock-summary">
+            <span class="section-kicker">AVAILABLE STOCK</span>
+            <strong>@Model.AvailableQuantity.ToString("N0")</strong>
+            <span>unexpired units in stock</span>
+            <small>Expired batches are excluded from available quantity.</small>
+        </section>
+    </div>
+
+    <section class="panel medicine-panel medicine-batches-panel">
+        <div class="panel-heading">
+            <div>
+                <h2>Stock batches</h2>
+                <p>Batch quantities and expiry dates</p>
+            </div>
+        </div>
+        @if (Model.Batches.Count == 0)
+        {
+            <div class="medicine-empty medicine-empty-compact">
+                <strong>No stock batches recorded</strong>
+                <span>Stock batches will appear here when stock management is available.</span>
+            </div>
+        }
+        else
+        {
+            <div class="table-wrap medicine-table-wrap">
+                <table class="medicine-table">
+                    <thead>
+                        <tr><th>BATCH NUMBER</th><th>SUPPLIER</th><th class="align-right">QUANTITY</th><th>EXPIRY DATE</th><th>STATUS</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var batch in Model.Batches)
+                        {
+                            var expired = batch.ExpiryDate.Date < DateTime.UtcNow.Date;
+                            <tr>
+                                <td class="medicine-price">@batch.BatchNumber</td>
+                                <td>@batch.SupplierName</td>
+                                <td class="align-right">@batch.Quantity.ToString("N0")</td>
+                                <td>@batch.ExpiryDate.ToString("dd MMM yyyy")</td>
+                                <td><span class="medicine-status @(expired ? "status-inactive" : "status-active")">@(expired ? "Expired" : "Usable")</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+</section>
