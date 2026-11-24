@@ -1,0 +1,4 @@
+using MediStock.Data;using Microsoft.AspNetCore.Authorization;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore;
+namespace MediStock.Pages.Suppliers;
+[Authorize]public sealed class DetailsModel(MediStockDbContext db):PageModel{public Supplier?Supplier{get;private set;}public IReadOnlyList<SupplierBatch> Batches{get;private set;}=[];public async Task<IActionResult>OnGetAsync(int id,CancellationToken ct){Supplier=await db.Suppliers.AsNoTracking().SingleOrDefaultAsync(x=>x.Id==id,ct);if(Supplier is null)return NotFound();Batches=await db.StockBatches.AsNoTracking().Where(x=>x.SupplierId==id).OrderBy(x=>x.ExpiryDate).Select(x=>new SupplierBatch(x.Medicine.Name,x.BatchNumber,x.Quantity,x.ExpiryDate)).ToListAsync(ct);return Page();}}
+public sealed record SupplierBatch(string MedicineName,string BatchNumber,int Quantity,System.DateTime ExpiryDate);

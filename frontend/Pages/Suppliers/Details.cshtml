@@ -1,0 +1,6 @@
+@page
+@model MediStock.Pages.Suppliers.DetailsModel
+@{ViewData["Title"]="Supplier details";}
+<section class="medicine-page wrap"><div class="page-heading"><div><a class="back-link" asp-page="Index">← Suppliers</a><h1>@Model.Supplier?.Name</h1></div><a class="button button-primary" asp-page="Edit" asp-route-id="@Model.Supplier?.Id">Edit supplier</a></div>
+<section class="panel medicine-detail-panel"><dl class="medicine-info-list"><div><dt>Contact person</dt><dd>@(Model.Supplier?.ContactPerson??"—")</dd></div><div><dt>Phone</dt><dd>@Model.Supplier?.Phone</dd></div><div><dt>Email</dt><dd>@(Model.Supplier?.Email??"—")</dd></div><div><dt>Address</dt><dd>@(Model.Supplier?.Address??"—")</dd></div></dl></section>
+<section class="panel medicine-batches-panel"><div class="panel-heading"><h2>Supplied stock batches</h2></div><div class="table-wrap"><table class="medicine-table"><thead><tr><th>MEDICINE</th><th>BATCH</th><th>QUANTITY</th><th>EXPIRY</th></tr></thead><tbody>@foreach(var b in Model.Batches){<tr><td>@b.MedicineName</td><td>@b.BatchNumber</td><td>@b.Quantity</td><td>@b.ExpiryDate.ToString("dd MMM yyyy")</td></tr>}</tbody></table></div></section></section>

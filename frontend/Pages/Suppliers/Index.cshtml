@@ -1,0 +1,8 @@
+@page
+@model MediStock.Pages.Suppliers.IndexModel
+@{ViewData["Title"]="Suppliers";}
+<section class="medicine-page wrap"><div class="page-heading"><div><span class="section-kicker">PURCHASING</span><h1>Suppliers</h1><p>Manage supplier contact and supply records.</p></div><a class="button button-primary" asp-page="Create">＋ Add supplier</a></div>
+@if(Model.StatusMessage is not null){<div class="medicine-message">@Model.StatusMessage</div>} @if(Model.ErrorMessage is not null){<div class="medicine-message medicine-message-error">@Model.ErrorMessage</div>}
+<section class="panel medicine-panel"><form method="get" class="medicine-search"><input name="Search" value="@Model.Search" placeholder="Search supplier name, phone, or email"/></form><div class="table-wrap medicine-table-wrap"><table class="medicine-table"><thead><tr><th>SUPPLIER</th><th>PHONE</th><th>EMAIL</th><th>ADDRESS</th><th>ACTIONS</th></tr></thead><tbody>
+@foreach(var x in Model.Items){<tr><td><a class="medicine-name" asp-page="Details" asp-route-id="@x.Id">@x.Name</a></td><td>@x.Phone</td><td>@(x.Email??"—")</td><td>@(x.Address??"—")</td><td><div class="medicine-row-actions"><a asp-page="Details" asp-route-id="@x.Id">View</a><a asp-page="Edit" asp-route-id="@x.Id">Edit</a><form method="post" asp-page-handler="Delete" asp-route-id="@x.Id" onsubmit="return confirm('Deactivate or delete this supplier?');"><button class="delete-link">Delete</button></form></div></td></tr>}
+</tbody></table></div></section></section>

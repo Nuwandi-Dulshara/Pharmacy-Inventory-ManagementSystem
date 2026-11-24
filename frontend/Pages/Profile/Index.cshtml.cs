@@ -1,0 +1,2 @@
+using Microsoft.AspNetCore.Authorization;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;
+namespace MediStock.Pages.Profile;[Authorize]public sealed class IndexModel(AuthService auth):PageModel{public ProfileRecord?Profile{get;private set;}[TempData]public string?StatusMessage{get;set;}public void OnGet(){var email=User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;if(!string.IsNullOrWhiteSpace(email))Profile=auth.GetProfile(email);}}
