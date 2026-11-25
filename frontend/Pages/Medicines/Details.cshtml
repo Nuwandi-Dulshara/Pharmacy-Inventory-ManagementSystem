@@ -9,7 +9,6 @@
         <div>
             <a class="back-link" asp-page="Index">← Medicine Management</a>
             <h1>@Model.Medicine!.Name</h1>
-            <p>Medicine details and available stock.</p>
         </div>
         <a class="button button-primary" asp-page="Edit" asp-route-id="@Model.Medicine.Id">Edit medicine</a>
     </div>
@@ -24,7 +23,6 @@
             <div class="panel-heading">
                 <div>
                     <h2>Medicine information</h2>
-                    <p>Catalogue and pricing details</p>
                 </div>
                 <span class="medicine-status @(Model.Medicine.IsActive ? "status-active" : "status-inactive")">
                     @(Model.Medicine.IsActive ? "Active" : "Inactive")
@@ -51,7 +49,6 @@
         <div class="panel-heading">
             <div>
                 <h2>Stock batches</h2>
-                <p>Batch quantities and expiry dates</p>
             </div>
         </div>
         @if (Model.Batches.Count == 0)

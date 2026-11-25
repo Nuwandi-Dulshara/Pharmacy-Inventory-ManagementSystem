@@ -1,4 +1,4 @@
-<UserControl x:Class="MediStock.Desktop.Views.SalesView"
+<UserControl Tag="Sales" x:Class="MediStock.Desktop.Views.SalesView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Grid>
@@ -6,12 +6,11 @@
             <RowDefinition Height="Auto" /><RowDefinition Height="*" /><RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel>
-            <TextBlock Text="Sales / POS" FontSize="28" FontWeight="SemiBold" />
+            <TextBlock Text="Sales / POS" Style="{StaticResource PageHeadingStyle}" />
             <TextBlock Text="Stock is deducted when the sale is completed."
                        Foreground="{DynamicResource MutedBrush}" Margin="0,3,0,14" />
-            <Border Background="{DynamicResource SurfaceBrush}" Padding="12" Margin="0,0,0,12"
-                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="8">
-                <StackPanel Orientation="Horizontal">
+            <Border Style="{StaticResource CardBorderStyle}" Padding="12" Margin="0,0,0,12">
+                <WrapPanel>
                     <ComboBox x:Name="MedicineBox" Width="400" DisplayMemberPath="Display" />
                     <TextBox x:Name="QuantityBox" Width="95" Text="1" ToolTip="Quantity to add" />
                     <Button Content="Add to cart" Click="AddToCart_Click" />
@@ -19,7 +18,7 @@
                         <ComboBoxItem Content="Cash" /><ComboBoxItem Content="Card" />
                         <ComboBoxItem Content="Bank transfer" /><ComboBoxItem Content="Other" />
                     </ComboBox>
-                </StackPanel>
+                </WrapPanel>
             </Border>
         </StackPanel>
         <DataGrid x:Name="CartGrid" Grid.Row="1" SelectionChanged="CartGrid_SelectionChanged">
@@ -37,7 +36,7 @@
                 <TextBox x:Name="SetQuantityBox" Width="105" ToolTip="New quantity for selected cart item" />
                 <Button Content="Set quantity" Click="SetQuantity_Click" />
                 <Button Content="Remove item" Click="RemoveItem_Click"
-                        Background="{DynamicResource AccentLightBrush}" Foreground="{DynamicResource TextBrush}" />
+                        Style="{StaticResource SecondaryButtonStyle}" />
                 <TextBlock x:Name="StatusText" VerticalAlignment="Center" TextWrapping="Wrap" />
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">

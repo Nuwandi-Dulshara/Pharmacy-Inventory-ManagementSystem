@@ -7,19 +7,13 @@
 <section class="auth-page wrap">
     <aside class="auth-aside">
         <div class="aside-icon" aria-hidden="true">✚</div>
-        <span class="section-kicker">ACCOUNT REGISTRATION</span>
         <h1>Create a pharmacy account.</h1>
-        <p>Register to manage pharmacy medicines, stock, and sales.</p>
-        <div class="aside-note">
-            <strong>ACCOUNT SECURITY</strong>
-            <span>Account details are stored locally. Passwords are salted and securely hashed.</span>
-        </div>
+        <img class="auth-illustration" src="/images/pharmacy.svg" alt="" width="600" height="480" />
+        <p class="auth-aside-note">Your stock. Your team. Your pharmacy.</p>
     </aside>
     <div class="auth-content">
         <div class="auth-heading">
-            <span class="section-kicker">REGISTRATION</span>
             <h2>Create your account</h2>
-            <p>Enter your account and pharmacy details.</p>
         </div>
         <div class="role-note"><span class="role-note-icon">✦</span>The first account registered becomes the pharmacy administrator.</div>
         <form method="post" class="auth-form">
@@ -47,7 +41,7 @@
             <div class="field">
                 <label asp-for="Input.Password">Password</label>
                 <div class="password-control">
-                    <input asp-for="Input.Password" autocomplete="new-password" placeholder="Create a password" />
+                    <input asp-for="Input.Password" type="password" autocomplete="new-password" placeholder="Create a password" />
                     <button type="button" class="password-toggle" data-password-toggle="Input_Password" aria-label="Show password">Show</button>
                 </div>
                 <span asp-validation-for="Input.Password" class="field-error"></span>
@@ -56,7 +50,7 @@
             <div class="field">
                 <label asp-for="Input.ConfirmPassword">Confirm password</label>
                 <div class="password-control">
-                    <input asp-for="Input.ConfirmPassword" autocomplete="new-password" placeholder="Enter your password again" />
+                    <input asp-for="Input.ConfirmPassword" type="password" autocomplete="new-password" placeholder="Enter your password again" />
                     <button type="button" class="password-toggle" data-password-toggle="Input_ConfirmPassword" aria-label="Show password">Show</button>
                 </div>
                 <span asp-validation-for="Input.ConfirmPassword" class="field-error"></span>
@@ -66,6 +60,3 @@
         <p class="auth-switch">Already registered? <a asp-page="/Account/Login">Login</a></p>
     </div>
 </section>
-@section Scripts {
-    <script src="~/js/site.js" asp-append-version="true"></script>
-}

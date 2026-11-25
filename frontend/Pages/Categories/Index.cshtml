@@ -2,7 +2,7 @@
 @model MediStock.Pages.Categories.IndexModel
 @{ ViewData["Title"] = "Categories"; }
 <section class="medicine-page wrap">
-  <div class="page-heading"><div><span class="section-kicker">CATALOGUE</span><h1>Categories</h1><p>Organize medicines by category.</p></div><a class="button button-primary" asp-page="Create">＋ Add category</a></div>
+  <div class="page-heading"><div><h1>Categories</h1></div><a class="button button-primary" asp-page="Create">＋ Add category</a></div>
   @if (Model.StatusMessage is not null) { <div class="medicine-message">@Model.StatusMessage</div> }
   @if (Model.ErrorMessage is not null) { <div class="medicine-message medicine-message-error">@Model.ErrorMessage</div> }
   <section class="panel medicine-panel">

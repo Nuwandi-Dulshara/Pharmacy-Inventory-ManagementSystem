@@ -1,4 +1,4 @@
-<UserControl x:Class="MediStock.Desktop.Views.ReportsView"
+<UserControl Tag="Reports" x:Class="MediStock.Desktop.Views.ReportsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Grid>
@@ -8,12 +8,11 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel>
-            <TextBlock Text="Reports" FontSize="28" FontWeight="SemiBold" />
+            <TextBlock Text="Reports" Style="{StaticResource PageHeadingStyle}" />
             <TextBlock Text="Filter and export sales, stock, expiry, and supplier reports."
                        Foreground="{DynamicResource MutedBrush}" Margin="0,3,0,12" />
-            <Border Background="{DynamicResource SurfaceBrush}" Padding="12" Margin="0,0,0,12"
-                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="8">
-                <StackPanel Orientation="Horizontal">
+            <Border Style="{StaticResource CardBorderStyle}" Padding="12" Margin="0,0,0,12">
+                <WrapPanel>
                     <ComboBox x:Name="ReportTypeBox" Width="155" SelectedIndex="0">
                         <ComboBoxItem Content="Sales" /><ComboBoxItem Content="Stock" />
                         <ComboBoxItem Content="Expiry" /><ComboBoxItem Content="Supplier" />
@@ -23,10 +22,9 @@
                     <TextBlock Text="To" VerticalAlignment="Center" Margin="8,0,6,8" />
                     <DatePicker x:Name="ToPicker" Width="145" />
                     <Button Content="Generate" Click="Generate_Click" />
-                    <Button Content="Export CSV" Click="ExportCsv_Click"
-                            Background="{DynamicResource AccentLightBrush}" Foreground="{DynamicResource TextBrush}" />
+                    <Button Content="Export CSV" Click="ExportCsv_Click" Style="{StaticResource SecondaryButtonStyle}" />
                     <Button Content="Export PDF" Click="ExportPdf_Click" />
-                </StackPanel>
+                </WrapPanel>
             </Border>
         </StackPanel>
         <DataGrid x:Name="ReportGrid" Grid.Row="1" AutoGenerateColumns="True" />

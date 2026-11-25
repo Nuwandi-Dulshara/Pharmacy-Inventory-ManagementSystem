@@ -2,7 +2,7 @@
 @model MediStock.Pages.Predictions.IndexModel
 @{ViewData["Title"]="Demand forecast";}
 <section class="medicine-page wrap">
-    <div class="page-heading"><div><span class="section-kicker">SALES HISTORY</span><h1>Demand forecast</h1><p>Estimates are based on historical completed sales.</p></div></div>
+    <div class="page-heading"><div><h1>Demand forecast</h1><p>Estimates are based on historical completed sales.</p></div></div>
     <section class="panel medicine-form">
         <form method="get" class="medicine-form-grid">
             <div class="field"><label>Medicine</label><select name="MedicineId" asp-items="Model.Medicines"></select></div>

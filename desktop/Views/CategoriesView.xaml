@@ -1,4 +1,4 @@
-<UserControl x:Class="MediStock.Desktop.Views.CategoriesView"
+<UserControl Tag="Categories" x:Class="MediStock.Desktop.Views.CategoriesView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Grid>
@@ -8,11 +8,10 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel>
-            <TextBlock Text="Categories" FontSize="28" FontWeight="SemiBold" />
+            <TextBlock Text="Categories" Style="{StaticResource PageHeadingStyle}" />
             <TextBlock Text="Add, edit, and search medicine categories. In-use categories cannot be deleted."
                        Foreground="{DynamicResource MutedBrush}" Margin="0,3,0,12" />
-            <Border Background="{DynamicResource SurfaceBrush}" Padding="12" Margin="0,0,0,12"
-                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="8">
+            <Border Style="{StaticResource CardBorderStyle}" Padding="12" Margin="0,0,0,12">
                 <Grid>
                     <Grid.ColumnDefinitions><ColumnDefinition Width="220" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Margin="0,0,12,0">
@@ -26,14 +25,13 @@
                     </StackPanel>
                 </Grid>
             </Border>
-            <StackPanel Orientation="Horizontal">
+            <WrapPanel>
                 <Button x:Name="SaveButton" Content="Add category" Click="Save_Click" />
-                <Button Content="Clear form" Click="Clear_Click" Background="{DynamicResource AccentLightBrush}"
-                        Foreground="{DynamicResource TextBrush}" />
-                <Button Content="Delete selected" Click="Delete_Click" Background="{DynamicResource DangerBrush}" />
+                <Button Content="Clear form" Click="Clear_Click" Style="{StaticResource SecondaryButtonStyle}" />
+                <Button Content="Delete selected" Click="Delete_Click" Style="{StaticResource DangerButtonStyle}" />
                 <TextBox x:Name="SearchBox" Width="260" ToolTip="Search categories" />
                 <Button Content="Search" Click="Search_Click" />
-            </StackPanel>
+            </WrapPanel>
         </StackPanel>
         <DataGrid x:Name="CategoriesGrid" Grid.Row="1" SelectionChanged="CategoriesGrid_SelectionChanged">
             <DataGrid.Columns>
