@@ -1,0 +1,44 @@
+@page
+@model MediStock.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<section class="auth-page auth-page-login wrap">
+    <aside class="auth-aside">
+        <div class="aside-icon" aria-hidden="true">✚</div>
+        <h1>Sign in to your account.</h1>
+        <img class="auth-illustration" src="/images/pharmacy.svg" alt="" width="600" height="480" />
+        <p class="auth-aside-note">Your stock. Your team. Your pharmacy.</p>
+    </aside>
+    <div class="auth-content login-content">
+        <div class="auth-heading">
+            <h2>Login</h2>
+        </div>
+        @if (TempData["StatusMessage"] is string statusMessage)
+        {
+            <div class="success-message" role="status">@statusMessage</div>
+        }
+        <form method="post" class="auth-form">
+            <div asp-validation-summary="ModelOnly" class="validation-summary" role="alert"></div>
+            <div class="field">
+                <label asp-for="Input.Email">Email address</label>
+                <input asp-for="Input.Email" type="email" autocomplete="username" placeholder="you@example.com" />
+                <span asp-validation-for="Input.Email" class="field-error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Input.Password">Password</label>
+                <div class="password-control">
+                    <input asp-for="Input.Password" type="password" autocomplete="current-password" placeholder="Enter your password" />
+                    <button type="button" class="password-toggle" data-password-toggle="Input_Password" aria-label="Show password">Show</button>
+                </div>
+                <span asp-validation-for="Input.Password" class="field-error"></span>
+            </div>
+            <div class="form-options">
+                <label class="checkbox-label"><input asp-for="Input.RememberEmail" /> <span>Remember email</span></label>
+            </div>
+            <button type="submit" class="button button-primary button-full">Login <span aria-hidden="true">→</span></button>
+        </form>
+        <p class="auth-switch">New to MediStock? <a asp-page="/Account/Register">Create an account</a></p>
+    </div>
+</section>

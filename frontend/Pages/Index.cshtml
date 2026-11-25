@@ -1,0 +1,61 @@
+﻿@page
+@model IndexModel
+@inject MediStock.Services.AppSettingsService Settings
+@{
+    ViewData["Title"] = "Pharmacy management";
+    var pharmacyName = await Settings.GetStringAsync("PharmacyName", "Your pharmacy");
+    var pharmacyAddress = await Settings.GetStringAsync("PharmacyAddress", "");
+    var pharmacyContact = await Settings.GetStringAsync("PharmacyContact", "");
+}
+
+<div class="landing-hero" id="home">
+    <section class="hero wrap">
+        <div class="hero-copy">
+            <span class="hero-label"><span aria-hidden="true">✚</span> A healthier way to manage your pharmacy</span>
+            <h1>Good care starts with<br /><em>well-managed stock.</em></h1>
+            <p class="hero-description">From the first delivery to the last sale of the day, keep your medicines, stock and pharmacy operations in order.</p>
+            <div class="hero-actions">
+                <a class="button button-primary" asp-page="/Account/Register">Create your account <span aria-hidden="true">→</span></a>
+                <a class="button button-outline" href="#features">Explore features</a>
+            </div>
+            <div class="hero-points"><span>✓ Stock visibility</span><span>✓ Expiry tracking</span><span>✓ Everyday sales</span></div>
+        </div>
+        <div class="pharmacy-visual">
+            <img src="~/images/pharmacy.svg" alt="Illustration of an organised pharmacy with medicine bottles, a medical cross and a stock checklist." width="600" height="480" />
+            <div class="visual-caption"><span class="feature-icon" aria-hidden="true">✓</span><div><strong>Everything in its place.</strong><span>Medicines · Stock · Sales</span></div></div>
+        </div>
+    </section>
+</div>
+
+<section class="about-section wrap" id="about" aria-labelledby="about-title">
+    <div class="section-intro"><span class="section-kicker">ABOUT MEDISTOCK</span><h2 id="about-title">More clarity.<br />Less busywork.</h2></div>
+    <div class="about-copy"><p>MediStock brings your pharmacy's inventory and daily sales together. Keep medicine details organised, follow stock movements and see which batches need attention.</p><p>Use the web or desktop application to work with your pharmacy's records, from supplier deliveries to invoices and reports.</p></div>
+    <div class="about-note"><span class="feature-icon" aria-hidden="true">✚</span><strong>Built around your working day</strong><p>One place for the details that keep your pharmacy running.</p></div>
+</section>
+
+<section class="features-section" id="features" aria-labelledby="features-title">
+    <div class="wrap">
+        <div class="section-intro"><span class="section-kicker">YOUR DAILY ESSENTIALS</span><h2 id="features-title">A clear view of your pharmacy.</h2></div>
+        <div class="feature-grid">
+            @foreach (var feature in Model.Features)
+            {
+                <article class="feature-card"><div class="feature-icon" aria-hidden="true">@feature.Icon</div><h3>@feature.Title</h3><p>@feature.Description</p></article>
+            }
+        </div>
+        <div class="feature-ribbon"><span>Also in your workspace</span><strong>Suppliers</strong><strong>Categories</strong><strong>Invoices</strong><strong>Reports</strong></div>
+    </div>
+</section>
+
+<section class="contact-section wrap" id="contact" aria-labelledby="contact-title">
+    <div class="contact-copy"><span class="section-kicker">GET IN TOUCH</span><h2 id="contact-title">Your pharmacy.<br />Connected.</h2><p>For account access or questions about your pharmacy's records, get in touch with your pharmacy administrator.</p><a class="button button-primary" asp-page="/Account/Login">Go to your account <span aria-hidden="true">→</span></a></div>
+    <div class="contact-card">
+        <span class="feature-icon" aria-hidden="true">✚</span><h3>@pharmacyName</h3>
+        @if (!string.IsNullOrWhiteSpace(pharmacyAddress))
+        { <div class="contact-detail"><strong>Visit</strong><address>@pharmacyAddress</address></div> }
+        @if (!string.IsNullOrWhiteSpace(pharmacyContact))
+        { <div class="contact-detail"><strong>Call</strong><span>@pharmacyContact</span></div> }
+        @if (string.IsNullOrWhiteSpace(pharmacyAddress) && string.IsNullOrWhiteSpace(pharmacyContact))
+        { <p>Contact details are available from your pharmacy administrator.</p> }
+        <div class="contact-detail"><strong>New to MediStock?</strong><a asp-page="/Account/Register">Create your pharmacy account →</a></div>
+    </div>
+</section>

@@ -1,0 +1,111 @@
+<Window x:Class="MediStock.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MediStock Desktop" Height="760" Width="1180"
+        MinHeight="620" MinWidth="960" WindowStartupLocation="CenterScreen">
+    <Grid Background="{DynamicResource CanvasBrush}" TextElement.Foreground="{DynamicResource TextBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Border Grid.Column="0" Background="{DynamicResource NavigationBrush}"
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0">
+            <DockPanel Margin="16" LastChildFill="True">
+                <Button DockPanel.Dock="Bottom" Content="Sign out" Click="SignOut_Click"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        HorizontalContentAlignment="Left" />
+                <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto"><StackPanel>
+                    <TextBlock Text="MediStock" FontSize="24" FontWeight="Bold"
+                               Foreground="White" Margin="2,6,0,0" />
+                    <TextBlock x:Name="UserLabel" TextWrapping="Wrap" FontSize="14"
+                               Foreground="#BCDCCB" Margin="2,2,0,18" />
+                    <Button Tag="&#x25C9;" Content="Dashboard" Click="Dashboard_Click"  >
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource NavigationButtonStyle}">
+                            <Style.Triggers><DataTrigger Binding="{Binding Content.Tag, ElementName=PageHost}" Value="Dashboard">
+                                <Setter Property="Background" Value="#C9EEA2" /><Setter Property="Foreground" Value="#16452E" /><Setter Property="BorderBrush" Value="#D5F7B5" />
+                            </DataTrigger></Style.Triggers>
+                        </Style></Button.Style>
+                    </Button>
+                    <Button Tag="&#x271A;" Content="Inventory" Click="Inventory_Click"  >
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource NavigationButtonStyle}">
+                            <Style.Triggers><DataTrigger Binding="{Binding Content.Tag, ElementName=PageHost}" Value="Inventory">
+                                <Setter Property="Background" Value="#C9EEA2" /><Setter Property="Foreground" Value="#16452E" /><Setter Property="BorderBrush" Value="#D5F7B5" />
+                            </DataTrigger></Style.Triggers>
+                        </Style></Button.Style>
+                    </Button>
+                    <Button Tag="&#x2197;" Content="Sales / POS" Click="Sales_Click"  >
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource NavigationButtonStyle}">
+                            <Style.Triggers><DataTrigger Binding="{Binding Content.Tag, ElementName=PageHost}" Value="Sales">
+                                <Setter Property="Background" Value="#C9EEA2" /><Setter Property="Foreground" Value="#16452E" /><Setter Property="BorderBrush" Value="#D5F7B5" />
+                            </DataTrigger></Style.Triggers>
+                        </Style></Button.Style>
+                    </Button>
+                    <Button Tag="&#x25A4;" Content="Invoices" Click="Invoices_Click"  >
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource NavigationButtonStyle}">
+                            <Style.Triggers><DataTrigger Binding="{Binding Content.Tag, ElementName=PageHost}" Value="Invoices">
+                                <Setter Property="Background" Value="#C9EEA2" /><Setter Property="Foreground" Value="#16452E" /><Setter Property="BorderBrush" Value="#D5F7B5" />
+                            </DataTrigger></Style.Triggers>
+                        </Style></Button.Style>
+                    </Button>
+                    <Button Tag="&#x25F7;" Content="Expiry management" Click="Expiry_Click"  >
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource NavigationButtonStyle}">
+                            <Style.Triggers><DataTrigger Binding="{Binding Content.Tag, ElementName=PageHost}" Value="Expiry">
+                                <Setter Property="Background" Value="#C9EEA2" /><Setter Property="Foreground" Value="#16452E" /><Setter Property="BorderBrush" Value="#D5F7B5" />
+                            </DataTrigger></Style.Triggers>
+                        </Style></Button.Style>
+                    </Button>
+                    <Button Tag="&#x2727;" Content="Demand prediction" Click="Predictions_Click"  >
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource NavigationButtonStyle}">
+                            <Style.Triggers><DataTrigger Binding="{Binding Content.Tag, ElementName=PageHost}" Value="Predictions">
+                                <Setter Property="Background" Value="#C9EEA2" /><Setter Property="Foreground" Value="#16452E" /><Setter Property="BorderBrush" Value="#D5F7B5" />
+                            </DataTrigger></Style.Triggers>
+                        </Style></Button.Style>
+                    </Button>
+                    <Button Tag="&#x25A5;" Content="Reports" Click="Reports_Click"  >
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource NavigationButtonStyle}">
+                            <Style.Triggers><DataTrigger Binding="{Binding Content.Tag, ElementName=PageHost}" Value="Reports">
+                                <Setter Property="Background" Value="#C9EEA2" /><Setter Property="Foreground" Value="#16452E" /><Setter Property="BorderBrush" Value="#D5F7B5" />
+                            </DataTrigger></Style.Triggers>
+                        </Style></Button.Style>
+                    </Button>
+                    <Button x:Name="CategoriesButton" Tag="&#x25C7;" Content="Categories" Click="Categories_Click"
+                             >
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource NavigationButtonStyle}">
+                            <Style.Triggers><DataTrigger Binding="{Binding Content.Tag, ElementName=PageHost}" Value="Categories">
+                                <Setter Property="Background" Value="#C9EEA2" /><Setter Property="Foreground" Value="#16452E" /><Setter Property="BorderBrush" Value="#D5F7B5" />
+                            </DataTrigger></Style.Triggers>
+                        </Style></Button.Style>
+                    </Button>
+                    <Button Tag="&#x25CB;" Content="Profile" Click="Profile_Click"  >
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource NavigationButtonStyle}">
+                            <Style.Triggers><DataTrigger Binding="{Binding Content.Tag, ElementName=PageHost}" Value="Profile">
+                                <Setter Property="Background" Value="#C9EEA2" /><Setter Property="Foreground" Value="#16452E" /><Setter Property="BorderBrush" Value="#D5F7B5" />
+                            </DataTrigger></Style.Triggers>
+                        </Style></Button.Style>
+                    </Button>
+                    <Button x:Name="SettingsButton" Tag="&#x2699;" Content="Settings" Click="Settings_Click"
+                             >
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource NavigationButtonStyle}">
+                            <Style.Triggers><DataTrigger Binding="{Binding Content.Tag, ElementName=PageHost}" Value="Settings">
+                                <Setter Property="Background" Value="#C9EEA2" /><Setter Property="Foreground" Value="#16452E" /><Setter Property="BorderBrush" Value="#D5F7B5" />
+                            </DataTrigger></Style.Triggers>
+                        </Style></Button.Style>
+                    </Button>
+                </StackPanel></ScrollViewer>
+
+            </DockPanel>
+        </Border>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+            <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="24,14">
+                <DockPanel><TextBlock Text="Pharmacy workspace" FontWeight="SemiBold" /><TextBlock Text="MediStock / Desktop" Foreground="{DynamicResource MutedBrush}" HorizontalAlignment="Right" /></DockPanel>
+            </Border>
+            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="24">
+                <ContentControl x:Name="PageHost" MinWidth="720" MinHeight="560" Width="{Binding ViewportWidth, RelativeSource={RelativeSource AncestorType=ScrollViewer}}" Height="{Binding ViewportHeight, RelativeSource={RelativeSource AncestorType=ScrollViewer}}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+            </ScrollViewer>
+            <Border Grid.Row="2" Background="{DynamicResource AccentLightBrush}" Padding="24,10" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0">
+                <DockPanel><TextBlock Text="&#169; MediStock" FontWeight="SemiBold" /><TextBlock Text="Pharmacy inventory management" Foreground="{DynamicResource MutedBrush}" HorizontalAlignment="Right" /></DockPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

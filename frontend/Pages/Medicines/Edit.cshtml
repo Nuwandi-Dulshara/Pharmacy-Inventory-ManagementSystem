@@ -1,0 +1,58 @@
+@page
+@model MediStock.Pages.Medicines.EditModel
+@{
+    ViewData["Title"] = "Edit medicine";
+}
+
+<section class="medicine-page wrap">
+    <div class="page-heading">
+        <div>
+            <a class="back-link" asp-page="Details" asp-route-id="@Model.Id">← Medicine details</a>
+            <h1>Edit medicine</h1>
+            <p>Update this medicine’s catalogue and pricing details.</p>
+        </div>
+    </div>
+
+    <form method="post" class="panel medicine-form">
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="ModelOnly" class="validation-summary" role="alert"></div>
+        <div class="medicine-form-grid">
+            <div class="field">
+                <label asp-for="Input.Name">Medicine name <span class="required-mark">*</span></label>
+                <input asp-for="Input.Name" autocomplete="off" />
+                <span asp-validation-for="Input.Name" class="field-error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Input.GenericName">Generic name</label>
+                <input asp-for="Input.GenericName" autocomplete="off" />
+                <span asp-validation-for="Input.GenericName" class="field-error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Input.CategoryId">Category</label>
+                <select asp-for="Input.CategoryId" asp-items="Model.Categories">
+                    <option value="">Uncategorized</option>
+                </select>
+                <span asp-validation-for="Input.CategoryId" class="field-error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Input.Brand">Brand / manufacturer</label>
+                <input asp-for="Input.Brand" autocomplete="organization" />
+                <span asp-validation-for="Input.Brand" class="field-error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Input.SellingPrice">Selling price (LKR) <span class="required-mark">*</span></label>
+                <input asp-for="Input.SellingPrice" type="number" min="0.01" max="999999999" step="0.01" />
+                <span asp-validation-for="Input.SellingPrice" class="field-error"></span>
+            </div>
+            <div class="field medicine-description-field">
+                <label asp-for="Input.Description">Description <span class="optional-label">(optional)</span></label>
+                <textarea asp-for="Input.Description" rows="4"></textarea>
+                <span asp-validation-for="Input.Description" class="field-error"></span>
+            </div>
+        </div>
+        <div class="medicine-form-actions">
+            <a class="button button-outline" asp-page="Details" asp-route-id="@Model.Id">Cancel</a>
+            <button class="button button-primary" type="submit">Save changes</button>
+        </div>
+    </form>
+</section>

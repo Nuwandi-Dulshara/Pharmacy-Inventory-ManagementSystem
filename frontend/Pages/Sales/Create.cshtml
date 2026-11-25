@@ -1,0 +1,95 @@
+@page
+@model MediStock.Pages.Sales.CreateModel
+@{ViewData["Title"]="New sale";}
+<section class="medicine-page wrap">
+    <div class="page-heading">
+        <div><a class="back-link" asp-page="Index">← Sales</a><h1>New sale</h1></div>
+    </div>
+    @if (Model.StatusMessage is not null)
+    {
+        <div class="medicine-message">@Model.StatusMessage</div>
+    }
+    <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+    <section class="panel pos-search-panel">
+        <form method="get" class="medicine-search">
+            <label for="medicine-search">Search medicines</label>
+            <input id="medicine-search" type="search" name="Search" value="@Model.Search" autocomplete="off" placeholder="Enter a medicine name"/>
+            <button class="button button-outline">Search</button>
+        </form>
+        @if (!string.IsNullOrWhiteSpace(Model.Search))
+        {
+            <div class="pos-catalog">
+                @if (Model.Medicines.Count == 0)
+                {
+                    <p class="pos-empty-results">No available medicines match your search.</p>
+                }
+                @foreach (var medicine in Model.Medicines)
+                {
+                    <div class="pos-catalog-item">
+                        <span>
+                            <strong>@medicine.Name</strong>
+                            <small>@medicine.AvailableQuantity available to this sale · LKR @medicine.UnitPrice.ToString("N2") each</small>
+                        </span>
+                        <form method="post" asp-page-handler="Add" class="pos-add-form">
+                            <input type="hidden" name="medicineId" value="@medicine.Id"/>
+                            <input type="hidden" name="Search" value="@Model.Search"/>
+                            <div class="pos-quantity-control">
+                                <button class="quantity-button" type="button" data-quantity-minus aria-label="Decrease quantity">−</button>
+                                <input name="quantity" type="number" min="1" max="@medicine.AvailableQuantity" value="1" aria-label="Quantity for @medicine.Name" required/>
+                                <button class="quantity-button" type="button" data-quantity-plus aria-label="Increase quantity">+</button>
+                            </div>
+                            <button class="button button-outline" type="submit">Add to cart</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+
+    <section class="panel pos-cart-panel">
+        <h2>Cart</h2>
+        <div class="table-wrap">
+            <table class="medicine-table">
+                <thead><tr><th>MEDICINE</th><th>QUANTITY</th><th>UNIT PRICE</th><th>SUBTOTAL</th><th></th></tr></thead>
+                <tbody>
+                    @if (Model.CartItems.Count == 0)
+                    {
+                        <tr><td colspan="5">No medicines added.</td></tr>
+                    }
+                    @foreach (var item in Model.CartItems)
+                    {
+                        <tr>
+                            <td class="medicine-name">@item.Name</td>
+                            <td>@item.Quantity</td>
+                            <td>LKR @item.UnitPrice.ToString("N2")</td>
+                            <td>LKR @((item.Quantity * item.UnitPrice).ToString("N2"))</td>
+                            <td>
+                                <form method="post" asp-page-handler="Remove">
+                                    <input type="hidden" name="medicineId" value="@item.MedicineId"/>
+                                    <input type="hidden" name="Search" value="@Model.Search"/>
+                                    <button class="delete-link" type="submit">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="pos-checkout">
+            <form method="post" class="pos-payment-form">
+                <div class="field">
+                    <label asp-for="Input.PaymentMethod">Payment method</label>
+                    <select asp-for="Input.PaymentMethod"><option>Cash</option><option>Card</option></select>
+                </div>
+                <div class="pos-total">
+                    <strong>Total</strong>
+                    <strong>LKR @Model.CartItems.Sum(item => item.Quantity * item.UnitPrice).ToString("N2")</strong>
+                </div>
+                <div class="medicine-form-actions">
+                    <button class="button button-outline" type="submit" asp-page-handler="Cancel">Cancel sale</button>
+                    <button class="button button-primary" type="submit" disabled="@(Model.CartItems.Count == 0)">Complete sale</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</section>

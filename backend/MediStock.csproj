@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\frontend\Pages\**\*.cshtml.cs" Link="Pages\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Content Include="..\frontend\Pages\**\*.cshtml" Link="Pages\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Content Include="..\frontend\wwwroot\**\*" Link="wwwroot\%(RecursiveDir)%(Filename)%(Extension)" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.12" />
+    <PackageReference Include="Microsoft.ML" Version="6.0.0" />
+    <PackageReference Include="QuestPDF" Version="2026.9.2" />
+  </ItemGroup>
+</Project>

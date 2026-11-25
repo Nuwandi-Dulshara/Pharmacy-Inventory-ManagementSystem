@@ -1,0 +1,34 @@
+<UserControl Tag="Dashboard" x:Class="MediStock.Desktop.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <TextBlock Text="Dashboard" Style="{StaticResource PageHeadingStyle}" />
+            <TextBlock x:Name="WelcomeText" Foreground="{DynamicResource MutedBrush}" Margin="0,0,0,20" />
+            <UniformGrid Columns="3" Margin="0,0,0,20">
+                <Border Style="{StaticResource CardBorderStyle}" Padding="22" Background="{DynamicResource AccentLightBrush}" BorderBrush="{DynamicResource AccentBrush}" Margin="0,0,12,0">
+                    <StackPanel><TextBlock Text="Active medicines" Foreground="{DynamicResource MutedBrush}" />
+                        <TextBlock x:Name="MedicinesCount" FontSize="28" FontWeight="Bold" /></StackPanel>
+                </Border>
+                <Border Style="{StaticResource CardBorderStyle}" Padding="22" Background="{DynamicResource AmberLightBrush}" Margin="0,0,12,0">
+                    <StackPanel><TextBlock Text="Units in stock" Foreground="{DynamicResource MutedBrush}" />
+                        <TextBlock x:Name="StockCount" FontSize="28" FontWeight="Bold" /></StackPanel>
+                </Border>
+                <Border Style="{StaticResource CardBorderStyle}" Padding="22" Background="{DynamicResource AccentLightBrush}">
+                    <StackPanel><TextBlock Text="Sales today" Foreground="{DynamicResource MutedBrush}" />
+                        <TextBlock x:Name="SalesToday" FontSize="28" FontWeight="Bold" /></StackPanel>
+                </Border>
+            </UniformGrid>
+            <TextBlock Text="Stock alerts" Style="{StaticResource SectionHeadingStyle}" Margin="0,0,0,8" />
+            <DataGrid x:Name="AlertsGrid" Height="260">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Medicine" Binding="{Binding Medicine}" Width="*" />
+                    <DataGridTextColumn Header="Batch" Binding="{Binding Batch}" Width="*" />
+                    <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="100" />
+                    <DataGridTextColumn Header="Expiry" Binding="{Binding Expiry, StringFormat=d}" Width="140" />
+                    <DataGridTextColumn Header="Alert" Binding="{Binding Alert}" Width="150" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

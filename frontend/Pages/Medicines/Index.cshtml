@@ -1,0 +1,94 @@
+@page
+@model MediStock.Pages.Medicines.IndexModel
+@{
+    ViewData["Title"] = "Medicine Management";
+}
+
+<section class="medicine-page wrap">
+    <div class="page-heading">
+        <div>
+            <h1>Medicine Management</h1>
+        </div>
+        <a class="button button-primary" asp-page="Create"><span aria-hidden="true">＋</span> Add medicine</a>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+    {
+        <div class="medicine-message" role="status">@Model.StatusMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="medicine-message medicine-message-error" role="alert">@Model.ErrorMessage</div>
+    }
+
+    <section class="panel medicine-panel">
+        <form method="get" class="medicine-search">
+            <label class="sr-only" for="medicine-search">Search medicines</label>
+            <input id="medicine-search" type="search" name="Search" value="@Model.Search"
+                   placeholder="Search name, generic name, brand, or category" />
+            <button type="submit" class="button button-outline">Search</button>
+            @if (!string.IsNullOrWhiteSpace(Model.Search))
+            {
+                <a class="clear-search" asp-page="Index">Clear</a>
+            }
+        </form>
+
+        @if (Model.Medicines.Count == 0)
+        {
+            <div class="medicine-empty">
+                <span class="medicine-empty-icon" aria-hidden="true">✚</span>
+                <strong>@(string.IsNullOrWhiteSpace(Model.Search) ? "No medicines yet" : "No matching medicines")</strong>
+                <span>@(string.IsNullOrWhiteSpace(Model.Search) ? "Add a medicine to begin building your catalogue." : "Try a different search, or clear the search field.")</span>
+                @if (string.IsNullOrWhiteSpace(Model.Search))
+                {
+                    <a class="button button-primary" asp-page="Create">Add your first medicine</a>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="table-wrap medicine-table-wrap">
+                <table class="medicine-table">
+                    <thead>
+                        <tr>
+                            <th>MEDICINE</th>
+                            <th>CATEGORY</th>
+                            <th>BRAND</th>
+                            <th class="align-right">UNIT PRICE</th>
+                            <th>STATUS</th>
+                            <th class="medicine-actions-heading">ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var medicine in Model.Medicines)
+                        {
+                            <tr>
+                                <td>
+                                    <a class="medicine-name" asp-page="Details" asp-route-id="@medicine.Id">@medicine.Name</a>
+                                </td>
+                                <td>@(medicine.Category ?? "—")</td>
+                                <td>@(medicine.Brand ?? "—")</td>
+                                <td class="align-right medicine-price">LKR @medicine.SellingPrice.ToString("N2")</td>
+                                <td>
+                                    <span class="medicine-status @(medicine.IsActive ? "status-active" : "status-inactive")">
+                                        @(medicine.IsActive ? "Active" : "Inactive")
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="medicine-row-actions">
+                                        <a asp-page="Details" asp-route-id="@medicine.Id">View</a>
+                                        <a asp-page="Edit" asp-route-id="@medicine.Id">Edit</a>
+                                        <form method="post" asp-page-handler="Delete" asp-route-id="@medicine.Id"
+                                              onsubmit="return confirm('Delete this medicine? Medicines linked to stock or sales will be deactivated instead.');">
+                                            <button type="submit" class="delete-link">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+</section>

@@ -1,0 +1,4 @@
+using MediStock.Data;using Microsoft.AspNetCore.Authorization;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore;
+namespace MediStock.Pages.Sales;
+[Authorize]public sealed class IndexModel(MediStockDbContext db):PageModel{[BindProperty(SupportsGet=true)]public string?Search{get;set;}public IReadOnlyList<SaleItemRow>Items{get;private set;}=[];[TempData]public string?StatusMessage{get;set;}public async Task OnGetAsync(CancellationToken ct){var q=db.Sales.AsNoTracking();if(!string.IsNullOrWhiteSpace(Search))q=q.Where(x=>EF.Functions.Like(x.InvoiceNumber,$"%{Search.Trim()}%"));Items=await q.OrderByDescending(x=>x.SoldAtUtc).Select(x=>new SaleItemRow(x.Id,x.InvoiceNumber,x.SoldAtUtc,x.TotalAmount,x.PaymentMethod,x.Status)).ToListAsync(ct);}}
+public sealed record SaleItemRow(int Id,string InvoiceNumber,System.DateTime Date,decimal Total,string PaymentMethod,string Status);

@@ -1,0 +1,170 @@
+@page
+@model MediStock.Pages.DashboardModel
+@using MediStock.Services
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<section class="dashboard-page wrap">
+    <div class="dashboard-heading">
+        <div>
+            <h1>Dashboard</h1>
+            <p>@User.FindFirst("PharmacyName")?.Value</p>
+        </div>
+        <div class="dashboard-actions">
+            <a class="button button-outline" asp-page="/Medicines/Create">
+                <span aria-hidden="true">＋</span> Add medicine
+            </a>
+            <a class="button button-primary" asp-page="/Sales/Create">
+                <span aria-hidden="true">＋</span> New sale
+            </a>
+        </div>
+    </div>
+    <div class="dashboard-stat-grid">
+        <article class="dashboard-stat">
+            <div class="stat-icon">✚</div>
+            <span class="dashboard-stat-label">TOTAL MEDICINES</span>
+            <strong>@Model.Overview.TotalMedicines</strong>
+        </article>
+        <article class="dashboard-stat">
+            <div class="stat-icon">▤</div>
+            <span class="dashboard-stat-label">TOTAL STOCK QUANTITY</span>
+            <strong>@Model.Overview.TotalStockQuantity.ToString("N0")</strong>
+        </article>
+        <article class="dashboard-stat">
+            <div class="stat-icon">↗</div>
+            <span class="dashboard-stat-label">TOTAL SALES</span>
+            <strong class="stat-money">LKR @Model.Overview.TotalSales.ToString("N2")</strong>
+        </article>
+        <article class="dashboard-stat">
+            <div class="stat-icon stat-icon-warning">!</div>
+            <span class="dashboard-stat-label">LOW STOCK MEDICINES</span>
+            <strong>@Model.Overview.LowStockMedicines</strong>
+            <small>At or below @Model.Overview.LowStockThreshold units</small>
+        </article>
+        <article class="dashboard-stat">
+            <div class="stat-icon stat-icon-warning">◷</div>
+            <span class="dashboard-stat-label">EXPIRED MEDICINES</span>
+            <strong>@Model.Overview.ExpiredMedicines</strong>
+        </article>
+        <article class="dashboard-stat">
+            <div class="stat-icon">♙</div>
+            <span class="dashboard-stat-label">TOTAL SUPPLIERS</span>
+            <strong>@Model.Overview.TotalSuppliers</strong>
+        </article>
+    </div>
+
+    <div class="dashboard-main-grid">
+        <section class="panel sales-panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>Monthly sales</h2>
+                </div>
+            </div>
+            <div class="sales-chart">
+                <img src="@Model.SalesChartDataUrl" alt="Column chart showing sales revenue for each of the last 12 months." />
+            </div>
+            <div class="chart-caption"><span class="chart-legend-dot"></span> Sales revenue <span class="chart-currency">LKR</span></div>
+        </section>
+
+        <section class="panel recent-panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>Recent sales</h2>
+                </div>
+            </div>
+            @if (Model.Overview.RecentSales.Count == 0)
+            {
+                <div class="empty-state">
+                    <span class="empty-state-icon">↗</span>
+                    <strong>No sales recorded yet</strong>
+                    <span>Completed sales will appear here.</span>
+                </div>
+            }
+            else
+            {
+                <div class="table-wrap">
+                    <table class="dashboard-table">
+                        <thead>
+                            <tr><th>INVOICE</th><th>DATE</th><th>PAYMENT</th><th class="align-right">TOTAL</th></tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var sale in Model.Overview.RecentSales)
+                            {
+                                <tr>
+                                    <td class="invoice-cell">@sale.InvoiceNumber</td>
+                                    <td>@sale.SoldAtUtc.ToLocalTime().ToString("dd MMM yyyy")</td>
+                                    <td>@sale.PaymentMethod</td>
+                                    <td class="align-right amount-cell">LKR @sale.TotalAmount.ToString("N2")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </section>
+    </div>
+
+    <div class="dashboard-alert-grid">
+        <section class="panel alert-panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>Low stock alerts</h2>
+                    <p>Medicines with @Model.Overview.LowStockThreshold or fewer usable units</p>
+                </div>
+                <span class="alert-count">@Model.Overview.LowStockMedicines</span>
+            </div>
+            @if (Model.Overview.LowStockAlerts.Count == 0)
+            {
+                <div class="empty-state compact-empty">
+                    <strong>Stock levels look good</strong>
+                    <span>No active medicines are at the low-stock threshold.</span>
+                </div>
+            }
+            else
+            {
+                <div class="alert-list">
+                    @foreach (var alert in Model.Overview.LowStockAlerts)
+                    {
+                        <div class="alert-row">
+                            <span class="alert-product-icon">✚</span>
+                            <strong>@alert.MedicineName</strong>
+                            <span class="stock-pill">@alert.Quantity units</span>
+                        </div>
+                    }
+                </div>
+            }
+        </section>
+
+        <section class="panel alert-panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>Medicines expiring soon</h2>
+                    <p>Stock expiring within @Model.Overview.ExpiryWarningDays days</p>
+                </div>
+                <span class="alert-count expiry-count">@Model.Overview.ExpiringSoonCount</span>
+            </div>
+            @if (Model.Overview.ExpiringSoon.Count == 0)
+            {
+                <div class="empty-state compact-empty">
+                    <strong>No upcoming expiries</strong>
+                    <span>Batches expiring within the next @Model.Overview.ExpiryWarningDays days will appear here.</span>
+                </div>
+            }
+            else
+            {
+                <div class="alert-list">
+                    @foreach (var batch in Model.Overview.ExpiringSoon)
+                    {
+                        <div class="alert-row expiry-row">
+                            <span class="expiry-product-icon">◷</span>
+                            <span class="expiry-product-name"><strong>@batch.MedicineName</strong><small>Batch @batch.BatchNumber · @batch.SupplierName</small></span>
+                            <span class="expiry-date">@batch.ExpiryDate.ToString("dd MMM yyyy")</span>
+                        </div>
+                    }
+                </div>
+            }
+        </section>
+    </div>
+</section>
+

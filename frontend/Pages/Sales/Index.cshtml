@@ -1,0 +1,6 @@
+@page
+@model MediStock.Pages.Sales.IndexModel
+@{ViewData["Title"]="Sales";}
+<section class="medicine-page wrap"><div class="page-heading"><div><h1>Sales</h1></div><a class="button button-primary" asp-page="Create">＋ New sale</a></div>
+@if(Model.StatusMessage is not null){<div class="medicine-message">@Model.StatusMessage</div>}
+<section class="panel medicine-panel"><form method="get" class="medicine-search"><input name="Search" value="@Model.Search" placeholder="Search invoice number"/></form><div class="table-wrap medicine-table-wrap"><table class="medicine-table"><thead><tr><th>INVOICE</th><th>DATE</th><th>TOTAL</th><th>PAYMENT</th><th>STATUS</th><th>ACTIONS</th></tr></thead><tbody>@foreach(var x in Model.Items){<tr><td class="medicine-name">@x.InvoiceNumber</td><td>@x.Date.ToLocalTime().ToString("dd MMM yyyy HH:mm")</td><td>LKR @x.Total.ToString("N2")</td><td>@x.PaymentMethod</td><td><span class="medicine-status @(x.Status=="Completed"?"status-active":"status-inactive")">@x.Status</span></td><td><div class="medicine-row-actions"><a asp-page="/Invoices/Details" asp-route-id="@x.Id">View</a><a asp-page="/Invoices/Details" asp-route-id="@x.Id" asp-fragment="print">Print</a></div></td></tr>}</tbody></table></div></section></section>
