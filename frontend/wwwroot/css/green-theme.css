@@ -1,5 +1,4 @@
-﻿/* Presentation layer: existing typography and font sizes remain in site.css. */
-:root {
+﻿:root {
     --forest: #08784f; --forest-deep: #05563e; --leaf: #d9f3e4;
     --ink: #153d30; --muted: #526e61; --line: #c4dfcf;
     --canvas: #e8f4ed; --surface: #ffffff; --surface-soft: #f0f9f3;
@@ -162,7 +161,6 @@ body[data-theme="dark"] .button-outline:hover { background: var(--leaf); }
 
 body[data-theme="dark"] .hero .button-primary { background: #c7ef9b; border-color: #c7ef9b; color: #17442c; }
 body[data-theme="dark"] .hero .button-primary:hover { background: #d9f9b8; }
-/* Keep the horizontal mobile navigation inside its grid track. */
 .app-sidebar, .sidebar-nav { min-width: 0; }
 @media (max-width: 760px) { .app-shell { grid-template-columns: minmax(0, 1fr); } .sidebar-nav { max-width: 100%; } }
 body[data-theme="dark"] .sales-chart { background: var(--surface-soft); }

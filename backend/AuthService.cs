@@ -362,36 +362,6 @@ public sealed class AuthService
         return updated;
     }
 
-    public bool ChangePassword(string email, string currentPassword, string newPassword)
-    {
-        using var connection = new SqliteConnection(ConnectionString);
-        connection.Open();
-        using var command = connection.CreateCommand();
-        command.CommandText = """
-            SELECT PasswordSalt, PasswordHash FROM Users
-            WHERE Email=$email COLLATE NOCASE;
-            """;
-        command.Parameters.AddWithValue("$email", email);
-        using var reader = command.ExecuteReader();
-        if (!reader.Read()) return false;
-        var salt = (byte[])reader["PasswordSalt"];
-        var hash = (byte[])reader["PasswordHash"];
-        if (!CryptographicOperations.FixedTimeEquals(HashPassword(currentPassword, salt), hash)) return false;
-        reader.Close();
-
-        var newSalt = RandomNumberGenerator.GetBytes(SaltSize);
-        var newHash = HashPassword(newPassword, newSalt);
-        using var update = connection.CreateCommand();
-        update.CommandText = """
-            UPDATE Users SET PasswordSalt=$salt, PasswordHash=$hash
-            WHERE Email=$email COLLATE NOCASE;
-            """;
-        update.Parameters.Add("$salt", SqliteType.Blob).Value = newSalt;
-        update.Parameters.Add("$hash", SqliteType.Blob).Value = newHash;
-        update.Parameters.AddWithValue("$email", email);
-        return update.ExecuteNonQuery() > 0;
-    }
-
     public string BackupDatabase(string destinationPath)
     {
         var fullDestination = Path.GetFullPath(destinationPath);
