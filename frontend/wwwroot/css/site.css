@@ -111,9 +111,6 @@ h1 { margin: 0; color: var(--ink); font-size: clamp(32px, 4.2vw, 48px); line-hei
 .auth-page-login { grid-template-columns: .88fr 1.12fr; }
 .login-content { max-width: none; padding-inline: 52px; }
 .login-content .auth-form { gap: 19px; }
-.dashboard-placeholder { min-height: calc(100vh - 134px); padding-block: 68px; }
-.dashboard-placeholder h1 { max-width: 760px; }
-.dashboard-placeholder .hero-description { margin-bottom: 30px; }
 .dashboard-page { padding-block: 34px 52px; }
 .dashboard-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .dashboard-heading h1 { margin-top: 0; font-size: clamp(28px, 2.8vw, 34px); letter-spacing: -.8px; }
@@ -315,7 +312,6 @@ h1 { margin: 0; color: var(--ink); font-size: clamp(32px, 4.2vw, 48px); line-hei
     .auth-aside h1 { max-width: 460px; font-size: 30px; }
     .aside-icon { margin-bottom: 13px; }
     .auth-content, .login-content { width: 100%; padding: 28px 24px 34px; }
-    .dashboard-placeholder { padding-block: 44px; }
     .dashboard-page { padding-block: 26px 40px; }
     .dashboard-heading { align-items: flex-start; flex-direction: column; }
     .dashboard-heading h1 { font-size: 29px; }
